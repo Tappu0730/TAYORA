@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hair Care Assessment | TAYORA</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <main class="panel">
+        <p class="eyebrow">YOUR PERSONAL GROOMING PROFILE</p>
+        <h1>Hair Care Assessment</h1>
+        <p>Tell us about your hair to receive personalized suggestions.</p>
+
+        <form id="hairForm">
+            <label for="hairType">What is your hair type?</label>
+            <select id="hairType" required>
+                <option value="">Choose an option</option>
+                <option value="straight">Straight</option>
+                <option value="wavy">Wavy</option>
+                <option value="curly">Curly</option>
+                <option value="coily">Coily</option>
+                <option value="unsure">Not sure</option>
+            </select>
+
+            <label for="scalpType">What is your scalp type?</label>
+            <select id="scalpType" required>
+                <option value="">Choose an option</option>
+                <option value="oily">Oily</option>
+                <option value="dry">Dry</option>
+                <option value="normal">Normal</option>
+                <option value="sensitive">Sensitive</option>
+                <option value="unsure">Not sure</option>
+            </select>
+
+            <label for="hairConcern">Main hair concern</label>
+            <select id="hairConcern">
+                <option value="none">No specific concern</option>
+                <option value="dryness">Dryness</option>
+                <option value="frizz">Frizz</option>
+                <option value="breakage">Breakage</option>
+                <option value="dandruff">Flaking or dandruff</option>
+                <option value="hairfall">Hair shedding</option>
+            </select>
+
+            <label for="hairGoal">Your hair goal</label>
+            <select id="hairGoal">
+                <option value="healthy">Maintain healthy hair</option>
+                <option value="smooth">Smoother hair</option>
+                <option value="volume">More volume</option>
+                <option value="moisture">More moisture</option>
+            </select>
+
+            <label for="hairBudget">Monthly budget (₹)</label>
+            <input
+                id="hairBudget"
+                type="number"
+                min="0"
+                max="100000"
+                placeholder="e.g. 1500"
+                required
+            >
+
+            <button class="button" type="submit">
+                Get Hair Care Suggestions
+            </button>
+        </form>
+
+        <section id="hairResults" aria-live="polite"></section>
+
+        <p><a href="skin-care.html">Skin Care</a></p>
+        <p><a href="dashboard.html">Back to dashboard</a></p>
+    </main>
+
+    <script src="../js/hair-assessment.js"></script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Products — TAYORA</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <header class="site-header">
+        <a class="brand" href="../index.html">TAYORA<span>.</span></a>
+        <nav>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="skin-care.html">Skin care</a>
+            <a href="hair-care.html">Hair care</a>
+        </nav>
+    </header>
+
+    <main class="page-wrap">
+        <p class="eyebrow">PERSONALIZED PRODUCT DISCOVERY</p>
+        <h1>Find your routine essentials.</h1>
+        <p class="page-intro">
+            Explore starter product suggestions based on your grooming needs and budget.
+        </p>
+
+        <section class="panel">
+            <h2>Your recommendations</h2>
+            <p id="profileMessage" class="notice">
+                Checking your saved preferences...
+            </p>
+
+            <div class="form-group">
+                <label for="category">Product category</label>
+                <select id="category">
+                    <option value="all">All products</option>
+                    <option value="skin">Skin care</option>
+                    <option value="hair">Hair care</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="budget">Maximum budget per product</label>
+                <select id="budget">
+                    <option value="all">Any budget</option>
+                    <option value="300">Up to ₹300</option>
+                    <option value="500">Up to ₹500</option>
+                    <option value="1000">Up to ₹1,000</option>
+                </select>
+            </div>
+        </section>
+
+        <section id="productList" class="product-grid" aria-live="polite"></section>
+
+        <p class="notice">
+            These are illustrative product types and estimated price ranges, not verified
+            listings. Prices, ingredients, availability and retailer links have not been
+            checked live. Choose products by checking their labels and suitability for you.
+        </p>
+    </main>
+
+    <script src="../js/products.js"></script>
+</body>
+
+</html>

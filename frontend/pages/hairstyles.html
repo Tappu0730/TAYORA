@@ -1,0 +1,232 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hairstyles — TAYORA</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <header class="site-header">
+        <a class="brand" href="../index.html">TAYORA<span>.</span></a>
+        <nav>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="fashion.html">Fashion</a>
+        </nav>
+    </header>
+
+    <main class="page-wrap">
+        <p class="eyebrow">HAIR & GROOMING</p>
+        <h1>Find your next look.</h1>
+        <p class="page-intro">
+            Discover hairstyle and grooming ideas based on your hair
+            texture, face shape and personal preferences.
+        </p>
+
+        <section class="panel">
+            <h2>Find your hairstyle</h2>
+
+            <form id="hair-style-form">
+                <div class="form-grid">
+
+                    <div class="field">
+                        <label for="hair-type">Your hair type</label>
+                        <select id="hair-type">
+                            <option value="straight">Straight</option>
+                            <option value="wavy">Wavy</option>
+                            <option value="curly">Curly</option>
+                            <option value="coily">Coily</option>
+                            <option value="unsure">Not sure</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="face-shape">Your face shape</label>
+                        <select id="face-shape">
+                            <option value="oval">Oval</option>
+                            <option value="round">Round</option>
+                            <option value="square">Square</option>
+                            <option value="heart">Heart</option>
+                            <option value="oblong">Oblong</option>
+                            <option value="unsure">Not sure</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="maintenance">Maintenance preference</label>
+                        <select id="maintenance">
+                            <option value="low">Low maintenance</option>
+                            <option value="medium">Medium maintenance</option>
+                            <option value="high">High maintenance</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="beard">Facial-hair preference</label>
+                        <select id="beard">
+                            <option value="none">No facial hair</option>
+                            <option value="clean">Clean shaven</option>
+                            <option value="stubble">Light stubble</option>
+                            <option value="beard">Beard</option>
+                            <option value="any">No preference</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <button class="button" type="submit">
+                    Find my hairstyle
+                </button>
+            </form>
+        </section>
+
+        <section class="panel">
+            <h2>Your hairstyle recommendations</h2>
+            <p id="hair-status" class="notice">
+                Choose your preferences to discover hairstyle ideas.
+            </p>
+            <div id="hair-results" class="cards"></div>
+        </section>
+
+        <section class="panel">
+            <h2>Grooming inspiration</h2>
+
+            <div class="cards">
+                <article class="mini-card">
+                    <span class="pill">EASY CARE</span>
+                    <h3>Low maintenance</h3>
+                    <p>Explore shorter cuts and simple styling routines.</p>
+                </article>
+
+                <article class="mini-card">
+                    <span class="pill">NATURAL</span>
+                    <h3>Natural texture</h3>
+                    <p>Work with your natural waves, curls and hair texture.</p>
+                </article>
+
+                <article class="mini-card">
+                    <span class="pill">GROOMING</span>
+                    <h3>Facial hair</h3>
+                    <p>Explore clean-shaven, stubble and beard grooming ideas.</p>
+                </article>
+            </div>
+        </section>
+
+        <p class="notice">
+            These are general style suggestions, not guaranteed face-shape
+            matches. Your comfort and personal preference come first.
+        </p>
+    </main>
+
+    <script>
+        const hairForm = document.getElementById("hair-style-form");
+        const hairResults = document.getElementById("hair-results");
+        const hairStatus = document.getElementById("hair-status");
+
+        const hairstyleIdeas = {
+            straight: [
+                ["Classic layered cut", "Explore soft layers for movement and shape."],
+                ["Textured crop", "A short textured style with a simple daily routine."]
+            ],
+            wavy: [
+                ["Natural waves", "Keep your natural waves with a light styling routine."],
+                ["Layered hairstyle", "Layers can help show off your natural texture."]
+            ],
+            curly: [
+                ["Curly layered cut", "Explore layers that work with your natural curls."],
+                ["Defined curls", "Use a suitable conditioner and gentle styling routine."]
+            ],
+            coily: [
+                ["Natural coily style", "Celebrate your natural texture with a suitable moisturizing routine."],
+                ["Short shaped cut", "Explore a neat shape that works with your hair texture."]
+            ],
+            unsure: [
+                ["Easy everyday style", "Start with a comfortable cut that works with your natural texture."],
+                ["Classic haircut", "Try a versatile style that is easy to maintain."]
+            ]
+        };
+
+        const faceSuggestions = {
+            oval: "You can explore a wide range of cuts and lengths.",
+            round: "You may enjoy exploring styles with added height or soft layers.",
+            square: "Consider exploring textured layers or softer styling around the face.",
+            heart: "Try exploring styles with balanced volume around the sides.",
+            oblong: "Consider exploring styles with balanced volume and softer proportions.",
+            unsure: "You can experiment with different styles and choose what you enjoy."
+        };
+
+        const maintenanceSuggestions = {
+            low: "Choose a simple cut that needs minimal daily styling.",
+            medium: "You can explore styles that need occasional trimming and styling.",
+            high: "You can experiment with more detailed cuts and styling routines."
+        };
+
+        const beardSuggestions = {
+            none: "Keep your look clean and focus on your hairstyle.",
+            clean: "A clean-shaven look can complement many different hairstyles.",
+            stubble: "Explore neatly maintained light stubble.",
+            beard: "Explore beard lengths and shapes that feel comfortable.",
+            any: "Experiment with different facial-hair styles if you wish."
+        };
+
+        hairForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const hairType = document.getElementById("hair-type").value;
+            const faceShape = document.getElementById("face-shape").value;
+            const maintenance = document.getElementById("maintenance").value;
+            const beard = document.getElementById("beard").value;
+
+            hairResults.replaceChildren();
+
+            const suggestions = [
+                ...hairstyleIdeas[hairType].map((idea, index) => ({
+                    category: "HAIRSTYLE " + (index + 1),
+                    title: idea[0],
+                    description: idea[1]
+                })),
+                {
+                    category: "FACE SHAPE",
+                    title: "Face shape inspiration",
+                    description: faceSuggestions[faceShape]
+                },
+                {
+                    category: "MAINTENANCE",
+                    title: "Your care routine",
+                    description: maintenanceSuggestions[maintenance]
+                },
+                {
+                    category: "GROOMING",
+                    title: "Facial-hair inspiration",
+                    description: beardSuggestions[beard]
+                }
+            ];
+
+            suggestions.forEach(function (suggestion) {
+                const card = document.createElement("article");
+                card.className = "mini-card";
+
+                const tag = document.createElement("span");
+                tag.className = "pill";
+                tag.textContent = suggestion.category;
+
+                const heading = document.createElement("h3");
+                heading.textContent = suggestion.title;
+
+                const description = document.createElement("p");
+                description.textContent = suggestion.description;
+
+                card.append(tag, heading, description);
+                hairResults.appendChild(card);
+            });
+
+            hairStatus.textContent =
+                "Your hairstyle ideas are ready! Explore the suggestions and choose what feels right for you.";
+        });
+    </script>
+</body>
+
+</html>

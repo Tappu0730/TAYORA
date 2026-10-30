@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard — TAYORA</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+  <header class="site-header">
+    <a class="brand" href="../index.html">TAYORA<span>.</span></a>
+    <nav><a href="profile.html">My profile</a><a href="face-analysis.html">Face analysis</a><a href="products.html">Products</a></nav>
+  </header>
+  <main class="page-wrap">
+    <p class="eyebrow">YOUR PERSONAL SPACE</p>
+    <h1>Your style dashboard</h1>
+    <p class="page-intro">A grooming and style hub shaped around the preferences you saved in your TAYORA profile.</p>
+
+    <section class="panel" aria-labelledby="profile-heading">
+      <h2 id="profile-heading">Your profile at a glance</h2>
+      <div id="profile-summary" class="form-grid">
+        <p>Loading your saved profile…</p>
+      </div>
+      <p id="profile-notice" class="notice" role="status" aria-live="polite"></p>
+      <a class="button" href="profile.html">Update my profile</a>
+    </section>
+
+    <h2>Explore your routine</h2>
+    <div class="cards">
+      <article class="mini-card"><span class="pill">SKIN</span>
+        <h3>Skin care routine</h3>
+        <p id="skin-tip">Explore cleanser, moisturizer, and sunscreen basics.</p><a href="skin-care.html"><u>Open skin
+            care →</u></a>
+      </article>
+      <article class="mini-card"><span class="pill">HAIR</span>
+        <h3>Hair care</h3>
+        <p id="hair-tip">Find a routine based on your hair and scalp goals.</p><a href="hair-care.html"><u>Open hair
+            care →</u></a>
+      </article>
+      <article class="mini-card"><span class="pill">STYLE</span>
+        <h3>Outfit inspiration</h3>
+        <p id="style-tip">Explore color ideas and looks for different occasions.</p><a href="fashion.html"><u>Explore
+            fashion →</u></a>
+      </article>
+      <article class="mini-card"><span class="pill">HAIRSTYLE</span>
+        <h3>Haircut inspiration</h3>
+        <p id="face-tip">Use your face shape as one starting point for exploring styles.</p><a
+          href="hairstyles.html"><u>Explore hairstyles →</u></a>
+      </article>
+      <article class="mini-card"><span class="pill">ANALYSIS</span>
+        <h3>Face shape estimate</h3>
+        <p>Try an optional photo based estimate to explore hairstyle ideas.</p><a href="face-analysis.html"><u>Analyze a photo →</u></a>
+      </article>
+    </div>
+
+    <section class="panel" aria-labelledby="starter-recommendations-heading">
+      <h2 id="starter-recommendations-heading">Your starter recommendations</h2>
+      <p id="recommendation-status" class="notice" role="status" aria-live="polite">Preparing recommendations…</p>
+      <div id="recommendation-list" class="cards"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Your next step</h2>
+      <p>These are starter suggestions based on your saved preferences, not medical assessments or guaranteed style
+        matches.</p>
+      <a class="button" href="products.html">Explore products</a>
+    </section>
+  </main>
+  <script src="../js/config.js"></script>
+  <script src="../js/dashboard.js"></script>
+</body>
+
+</html>

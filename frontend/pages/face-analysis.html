@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Analysis | TAYORA</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <header class="site-header">
+        <a class="brand" href="../index.html">TAYORA<span>.</span></a>
+        <nav>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="skin-care.html">Skin Care</a>
+            <a href="hair-care.html">Hair Care</a>
+            <a href="hairstyles.html">Hairstyles</a>
+        </nav>
+    </header>
+
+    <main class="page-wrap">
+        <p class="eyebrow">YOUR PERSONAL STYLE GUIDE</p>
+        <h1>Face Analysis</h1>
+        <p class="page-intro">
+            Upload a clear photo to begin exploring personalized hairstyle
+            and grooming suggestions.
+        </p>
+
+        <section class="panel">
+            <h2>Upload your photo</h2>
+            <p>
+                For best results, use a clear, front-facing photo with
+                good lighting and your face visible.
+            </p>
+
+            <form id="faceAnalysisForm">
+                <div class="form-group">
+                    <label for="facePhoto">Choose a photo</label>
+                    <input type="file" id="facePhoto" name="facePhoto" accept="image/jpeg,image/png,image/webp"
+                        required>
+                </div>
+
+                <div id="photoPreview" hidden>
+                    <img id="previewImage" alt="Preview of your selected photo"
+                        style="max-width: 100%; max-height: 350px; border-radius: 12px;">
+                </div>
+
+                <p id="photoMessage" class="notice" aria-live="polite">
+                    Your photo preview will appear here after you select an image.
+                </p>
+
+                <button type="submit" id="analyzeButton">
+                    Continue to Analysis
+                </button>
+            </form>
+            
+<div id="recommendationsSection" hidden>
+    <h2>Your Grooming Recommendations</h2>
+
+    <p id="faceShapeResult" class="notice" aria-live="polite"></p>
+    <p class="notice">Use this estimate as inspiration. You can edit your face shape in <a href="profile.html"><u>your profile</u></a>.</p>
+
+    <div class="recommendation-grid">
+        <article class="recommendation-card">
+            <h3>Hairstyle Ideas</h3>
+            <p id="hairstyleRecommendation"></p>
+        </article>
+
+        <article class="recommendation-card">
+            <h3>Beard Style Ideas</h3>
+            <p id="beardRecommendation"></p>
+        </article>
+
+        <article class="recommendation-card">
+            <h3>Skincare Tips</h3>
+            <p id="skincareRecommendation"></p>
+        </article>
+    </div>
+</div>
+
+        </section>
+
+        <section class="panel">
+            <h2>What happens next?</h2>
+            <p>
+                TAYORA analyzes your uploaded photo to estimate facial shape
+                and provide personalized grooming suggestions.
+            </p>
+            <p>
+                <strong>Privacy:</strong> When you submit your photo, it is uploaded
+                to the TAYORA backend for analysis and is not saved by this app.
+                Use a photo you are comfortable sending to your own application server.
+            </p>
+        </section>
+    </main>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/face-analysis.js"></script>
+</body>
+
+</html>

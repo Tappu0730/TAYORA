@@ -1,0 +1,49 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skin Care Assessment | TAYORA</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <main class="panel">
+        <p class="eyebrow">YOUR PERSONAL GROOMING PROFILE</p>
+        <h1>Skin Care Assessment</h1>
+        <p>Tell us about your skin and preferences to get started.</p>
+
+        <form id="skinForm">
+            <label for="skinType">What is your skin type?</label>
+            <select id="skinType" required>
+                <option value="">Choose an option</option>
+                <option value="oily">Oily</option>
+                <option value="dry">Dry</option>
+                <option value="normal">Normal</option>
+                <option value="combination">Combination</option>
+                <option value="unsure">Not sure</option>
+            </select>
+
+            <label for="concerns">Main skin concerns</label>
+            <select id="concerns">
+                <option value="none">No specific concern</option>
+                <option value="dryness">Dryness</option>
+                <option value="oiliness">Excess oil</option>
+                <option value="sensitivity">Sensitivity</option>
+                <option value="acne">Acne-prone skin</option>
+            </select>
+
+            <label for="budget">Monthly budget (₹)</label>
+            <input id="budget" type="number" min="0" max="100000"
+                   placeholder="e.g. 1500" required>
+
+            <button class="button" type="submit">Get Suggestions</button>
+        </form>
+
+        <section id="results" aria-live="polite"></section>
+        <p><a href="dashboard.html">Back to dashboard</a></p>
+    </main>
+
+    <script src="../js/assessment.js"></script>
+</body>
+</html>

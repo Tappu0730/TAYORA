@@ -1,0 +1,118 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>My Profile — TAYORA</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+    <a class="brand" href="../index.html">TAYORA<span>.</span></a>
+    <nav>
+        <a href="dashboard.html">Dashboard</a>
+    </nav>
+</header>
+
+<main class="page-wrap">
+    <p class="eyebrow">LET'S MAKE IT PERSONAL</p>
+    <h1>My profile</h1>
+    <p class="page-intro">Update your grooming and style preferences. Your profile stays in this browser.</p>
+
+    <form class="panel" id="profile-form">
+        <div class="form-grid">
+
+            <div class="field">
+                <label for="age">Age (optional)</label>
+                <input id="age" type="number" min="13" max="120" placeholder="Optional">
+            </div>
+
+            <div class="field">
+                <label for="gender">Gender</label>
+                <select id="gender">
+                    <option>Prefer not to say</option>
+                    <option>Woman</option>
+                    <option>Man</option>
+                    <option>Non-binary</option>
+                    <option>Other</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="skin">Skin type</label>
+                <select id="skin">
+                    <option>Not sure</option>
+                    <option>Dry</option>
+                    <option>Oily</option>
+                    <option>Combination</option>
+                    <option>Normal</option>
+                    <option>Sensitive</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="hair">Hair type</label>
+                <select id="hair">
+                    <option>Not sure</option>
+                    <option>Straight</option>
+                    <option>Wavy</option>
+                    <option>Curly</option>
+                    <option>Coily</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="face">Face shape</label>
+                <select id="face">
+                    <option>Not sure</option>
+                    <option>Oval</option>
+                    <option>Round</option>
+                    <option>Square</option>
+                    <option>Heart</option>
+                    <option>Oblong</option>
+                    <option>Diamond</option>
+                    <option>Round or square</option>
+                    <option>Round or oval</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="budget">Monthly budget (₹)</label>
+                <input id="budget" type="number" min="0" placeholder="1500">
+            </div>
+
+            <div class="field">
+                <label for="concerns">Skin or hair concerns</label>
+                <input id="concerns" placeholder="Dryness, frizz...">
+            </div>
+
+            <div class="field">
+                <label for="style">Clothing preference</label>
+                <select id="style">
+                    <option>Casual</option>
+                    <option>Minimal</option>
+                    <option>Streetwear</option>
+                    <option>Formal</option>
+                    <option>Traditional</option>
+                    <option>Experimental</option>
+                </select>
+            </div>
+
+        </div>
+
+        <div class="form-actions">
+            <button class="button" type="submit">Save Profile</button>
+        </div>
+
+        <p class="notice">
+            Your preferences will be saved in this browser.
+        </p>
+    </form>
+</main>
+
+<script src="../js/app.js"></script>
+
+</body>
+</html>

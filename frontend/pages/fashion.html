@@ -1,0 +1,205 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fashion — TAYORA</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <header class="site-header">
+        <a class="brand" href="../index.html">TAYORA<span>.</span></a>
+        <nav>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="products.html">Products</a>
+        </nav>
+    </header>
+
+    <main class="page-wrap">
+        <p class="eyebrow">PERSONAL STYLE</p>
+        <h1>Wear what feels like you.</h1>
+        <p class="page-intro">
+            Discover outfit ideas based on your occasion, colours,
+            comfort and budget.
+        </p>
+
+        <section class="panel">
+            <h2>Find your style</h2>
+
+            <form id="fashion-form">
+                <div class="form-grid">
+
+                    <div class="field">
+                        <label for="occasion">Choose occasion</label>
+                        <select id="occasion">
+                            <option value="everyday">Everyday / Casual</option>
+                            <option value="college">College</option>
+                            <option value="formal">Office / Formal</option>
+                            <option value="party">Party</option>
+                            <option value="traditional">Traditional</option>
+                            <option value="date">Date / Outing</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="colour">Favourite colour</label>
+                        <select id="colour">
+                            <option value="black">Black</option>
+                            <option value="white">White</option>
+                            <option value="blue">Blue</option>
+                            <option value="beige">Beige</option>
+                            <option value="green">Green</option>
+                            <option value="pastel">Pastel shades</option>
+                            <option value="any">No preference</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="budget">Your outfit budget (₹)</label>
+                        <input type="number" id="budget"
+                            min="0" placeholder="e.g. 1500" required>
+                    </div>
+
+                    <div class="field">
+                        <label for="comfort">Preferred style</label>
+                        <select id="comfort">
+                            <option value="comfortable">Comfortable</option>
+                            <option value="minimal">Minimal</option>
+                            <option value="trendy">Trendy</option>
+                            <option value="classic">Classic</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <button class="button" type="submit">
+                    Find my outfit
+                </button>
+            </form>
+        </section>
+
+        <section class="panel">
+            <h2>Your outfit recommendations</h2>
+            <p id="fashion-status" class="notice">
+                Choose your preferences to discover outfit ideas.
+            </p>
+            <div id="fashion-results" class="cards"></div>
+        </section>
+
+        <section class="panel">
+            <h2>Style inspiration</h2>
+
+            <div class="cards">
+                <article class="mini-card">
+                    <span class="pill">EVERYDAY</span>
+                    <h3>Casual essentials</h3>
+                    <p>Try comfortable jeans, basic tops and versatile sneakers.</p>
+                </article>
+
+                <article class="mini-card">
+                    <span class="pill">OCCASION</span>
+                    <h3>Smart & formal</h3>
+                    <p>Explore well-fitted shirts, trousers and elegant footwear.</p>
+                </article>
+
+                <article class="mini-card">
+                    <span class="pill">COLOR</span>
+                    <h3>Build a palette</h3>
+                    <p>Combine neutral base colours with accents you enjoy wearing.</p>
+                </article>
+            </div>
+        </section>
+
+        <p class="notice">
+            These are starter outfit suggestions. Choose what suits
+            your comfort, personality and personal taste.
+        </p>
+    </main>
+
+    <script>
+        const fashionForm = document.getElementById("fashion-form");
+        const fashionResults = document.getElementById("fashion-results");
+        const fashionStatus = document.getElementById("fashion-status");
+
+        const outfitIdeas = {
+            everyday: [
+                ["Casual everyday look", "Pair a comfortable T-shirt with jeans and sneakers."],
+                ["Relaxed look", "Try a casual shirt with trousers and comfortable shoes."]
+            ],
+            college: [
+                ["College casual", "Try straight-fit jeans, a simple top and sneakers."],
+                ["Smart college look", "Combine a shirt, relaxed trousers and a casual bag."]
+            ],
+            formal: [
+                ["Office-ready look", "Pair a formal shirt with tailored trousers and clean shoes."],
+                ["Minimal formal look", "Try a neutral-coloured outfit with a simple belt and watch."]
+            ],
+            party: [
+                ["Party-ready look", "Choose a statement top or shirt with well-fitted trousers."],
+                ["Elegant evening look", "Try a coordinated outfit with stylish footwear."]
+            ],
+            traditional: [
+                ["Traditional elegance", "Explore a kurta set or a traditional outfit with matching footwear."],
+                ["Fusion style", "Combine traditional pieces with modern accessories."]
+            ],
+            date: [
+                ["Relaxed outing look", "Try a well-fitted shirt or top with comfortable jeans."],
+                ["Smart casual look", "Combine neutral colours with clean, simple accessories."]
+            ]
+        };
+
+        fashionForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const occasion = document.getElementById("occasion").value;
+            const colour = document.getElementById("colour").value;
+            const budget = Number(document.getElementById("budget").value);
+            const comfort = document.getElementById("comfort").value;
+
+            if (!Number.isFinite(budget) || budget <= 0) {
+                fashionStatus.textContent = "Please enter a valid budget greater than zero.";
+                fashionResults.replaceChildren();
+                return;
+            }
+
+            const colourName = colour === "any" ? "your favourite colours" :
+                colour === "pastel" ? "pastel shades" : colour;
+
+            const ideas = outfitIdeas[occasion];
+
+            fashionResults.replaceChildren();
+
+            ideas.forEach(function (idea, index) {
+                const card = document.createElement("article");
+                card.className = "mini-card";
+
+                const tag = document.createElement("span");
+                tag.className = "pill";
+                tag.textContent = "OUTFIT " + (index + 1);
+
+                const heading = document.createElement("h3");
+                heading.textContent = idea[0];
+
+                const description = document.createElement("p");
+                description.textContent = idea[1];
+
+                const details = document.createElement("p");
+                details.textContent =
+                    "Colour: " + colourName +
+                    " | Style: " + comfort +
+                    " | Budget: ₹" + budget.toLocaleString("en-IN");
+
+                card.append(tag, heading, description, details);
+                fashionResults.appendChild(card);
+            });
+
+            fashionStatus.textContent =
+                "Here are your outfit ideas based on your preferences!";
+        });
+    </script>
+</body>
+
+</html>
