@@ -54,6 +54,17 @@ The frontend is configured to call the deployed Render API. If the Render servic
 - Product catalog entries and prices are examples, not live inventory.
 - Configure deployment, HTTPS, API access controls, and production data handling before making the app public.
 
+## Design references
+
+TAYORA uses these public projects as architecture references, not copied code:
+
+- [Face Lab](https://github.com/tommy1data/face-lab): browser-side MediaPipe face landmarks, photo upload, and live-frame analysis patterns.
+- [PostureGuard](https://github.com/Yoadkk/postureGuard): local-first MediaPipe pose heuristics, calibration, and temporal smoothing ideas.
+- [Skin Condition Detector AI](https://github.com/Ahmad1765/Skin-Condition-Detector-AI): region-based skin metrics and upload/webcam workflow; its medical-style model outputs are not enabled in TAYORA.
+- [Hair Coloring App](https://github.com/Ys-sudo/hair-coloring-app): local image upload and MediaPipe hair-segmentation approach.
+
+The current upload flow automatically estimates face shape only. Skin, hair, body-proportion, and posture observations remain user-confirmed until separate models are validated and added with their own privacy and license review.
+
 ## Project map
 
 ```text

@@ -8,6 +8,9 @@
     const startButton = document.getElementById("startCameraButton");
     const analyzeButton = document.getElementById("analyzeFrameButton");
     const stopButton = document.getElementById("stopCameraButton");
+    const uploadInput = document.getElementById("scanPhotoUpload");
+    const analyzeUploadButton = document.getElementById("analyzeUploadButton");
+    const uploadStatus = document.getElementById("uploadStatus");
     const recommendButton = document.getElementById("recommendButton");
     const resultsSection = document.getElementById("scanResults");
     const resultList = document.getElementById("scanResultList");
@@ -15,6 +18,8 @@
     const hairType = document.getElementById("hairType");
     const bodyProfile = document.getElementById("bodyProfile");
     const scanBudget = document.getElementById("scanBudget");
+    const maxUploadSize = 5 * 1024 * 1024;
+    const allowedUploadTypes = new Set(["image/jpeg", "image/png", "image/webp"]);
 
     let cameraStream = null;
 
@@ -119,6 +124,48 @@
         canvas.toBlob(resolve, "image/jpeg", 0.82);
     });
 
+    const applyFaceShapeResult = (result, statusSetter) => {
+        if (result.face_detected && result.estimated_face_shape) {
+            const estimated = result.estimated_face_shape
+                .split(" ")
+                .map((word) => word.toLowerCase() === "or" ? "or" : word.charAt(0).toUpperCase() + word.slice(1))
+                .join(" ");
+            const matchingOption = [...faceShape.options].find(
+                (option) => option.text.toLowerCase() === estimated.toLowerCase()
+            );
+            if (matchingOption) faceShape.value = matchingOption.value;
+            statusSetter(`Possible face-shape estimate: ${estimated}. You can change it below.`);
+            return;
+        }
+        statusSetter("No face was detected. Choose a face shape manually or try a clearer photo.");
+    };
+
+    const analyzeUploadedPhoto = async () => {
+        const file = uploadInput.files?.[0];
+        if (!file || !allowedUploadTypes.has(file.type) || file.size > maxUploadSize) {
+            uploadStatus.textContent = "Choose a JPG, PNG, or WebP photo under 5 MB.";
+            return;
+        }
+
+        analyzeUploadButton.disabled = true;
+        uploadStatus.textContent = "Analyzing one temporary photo for face shape...";
+        try {
+            const formData = new FormData();
+            formData.append("photo", file, file.name);
+            const response = await fetch(`${apiBase}/face-shape/analyze`, {
+                method: "POST",
+                body: formData
+            });
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.detail || "Photo analysis failed.");
+            applyFaceShapeResult(result, (message) => { uploadStatus.textContent = message; });
+        } catch (error) {
+            uploadStatus.textContent = `Photo could not be analyzed: ${error.message}`;
+        } finally {
+            analyzeUploadButton.disabled = false;
+        }
+    };
+
     const analyzeFrame = async () => {
         if (!cameraStream || !video.videoWidth) {
             setCameraStatus("Start the camera and wait for the preview before analyzing a frame.");
@@ -148,17 +195,7 @@
             const result = await response.json();
             if (!response.ok) throw new Error(result.detail || "Face-shape analysis failed.");
 
-            if (result.face_detected && result.estimated_face_shape) {
-                const estimated = result.estimated_face_shape
-                    .split(" ")
-                    .map((word) => word.toLowerCase() === "or" ? "or" : word.charAt(0).toUpperCase() + word.slice(1))
-                    .join(" ");
-                const matchingOption = [...faceShape.options].find((option) => option.text.toLowerCase() === estimated.toLowerCase());
-                if (matchingOption) faceShape.value = matchingOption.value;
-                setCameraStatus(`Preliminary face-shape estimate: ${estimated}. You can change it below.`);
-            } else {
-                setCameraStatus("No face was detected in that frame. You can choose a face shape manually.");
-            }
+            applyFaceShapeResult(result, setCameraStatus);
 
             // Remove the temporary pixel data as soon as the request has completed.
             canvas.width = 1;
@@ -236,6 +273,15 @@
     startButton.addEventListener("click", startCamera);
     stopButton.addEventListener("click", stopCamera);
     analyzeButton.addEventListener("click", analyzeFrame);
+    uploadInput.addEventListener("change", () => {
+        const file = uploadInput.files?.[0];
+        const valid = file && allowedUploadTypes.has(file.type) && file.size <= maxUploadSize;
+        analyzeUploadButton.disabled = !valid;
+        uploadStatus.textContent = valid
+            ? "Photo selected. Click Analyze uploaded photo to continue."
+            : "Choose a JPG, PNG, or WebP photo under 5 MB.";
+    });
+    analyzeUploadButton.addEventListener("click", analyzeUploadedPhoto);
     recommendButton.addEventListener("click", getRecommendations);
     window.addEventListener("beforeunload", stopCamera);
 })();

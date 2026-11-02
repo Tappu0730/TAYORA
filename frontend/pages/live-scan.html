@@ -50,11 +50,17 @@
                 <button id="analyzeFrameButton" class="button" type="button" disabled>Analyze frame</button>
                 <button id="stopCameraButton" class="button button-secondary" type="button" disabled>Stop camera</button>
             </div>
+            <div class="field scan-upload-field">
+                <label for="scanPhotoUpload">Or upload a clear face photo</label>
+                <input id="scanPhotoUpload" type="file" accept="image/jpeg,image/png,image/webp">
+                <button id="analyzeUploadButton" class="button button-secondary" type="button" disabled>Analyze uploaded photo</button>
+                <p id="uploadStatus" class="notice" role="status" aria-live="polite">The uploaded photo is used temporarily for face-shape estimation and is not saved.</p>
+            </div>
         </section>
 
         <section class="panel" aria-labelledby="observations-heading">
             <h2 id="observations-heading">Confirm your observations</h2>
-            <p class="page-intro">Automatic visual estimates are limited. Select what seems relevant and change anything that does not describe you.</p>
+            <p class="page-intro">Automatic visual estimates are limited. Values already selected may come from your saved profile; the camera/photo currently estimates face shape only. Select what seems relevant and change anything that does not describe you.</p>
 
             <div class="form-grid">
                 <div class="field">
