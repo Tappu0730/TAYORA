@@ -26,6 +26,16 @@ TAYORA is a personal grooming and style guide. This local MVP includes a browser
 
 The API allows the default Live Server origins on port 5500. If your frontend uses a different port, set `CORS_ORIGINS` in `backend/.env` using the format shown in `backend/.env.example`.
 
+## Publish the frontend on GitHub Pages
+
+The workflow at `.github/workflows/deploy-pages.yml` publishes only the `frontend/` folder whenever `main` changes. In the GitHub repository, open **Settings → Pages**, set the source to **GitHub Actions**, and wait for the workflow to finish. The project site URL will be:
+
+```text
+https://tappu0730.github.io/TAYORA/
+```
+
+The frontend is configured to call the deployed Render API. If the Render service has an explicit `CORS_ORIGINS` environment variable, include `https://tappu0730.github.io` there as well.
+
 ## What works
 
 - Profile preferences save in the current browser and appear on the dashboard.
