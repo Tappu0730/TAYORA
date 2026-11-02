@@ -31,3 +31,12 @@ def test_scan_recommendations_include_skin_ingredient_guidance():
 def test_scan_recommendations_reject_negative_budget():
     with pytest.raises(ValueError):
         ScanRecommendationInput.model_validate({"preferences": {"budget": -1}})
+
+
+def test_scan_recommendations_preserve_face_shape_source():
+    request = ScanRecommendationInput.model_validate({
+        "face_shape": "Oval",
+        "face_shape_source": "uploaded photo",
+    })
+    response = scan_recommendations(request)
+    assert response["scan_summary"]["face_shape_source"] == "uploaded photo"

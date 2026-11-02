@@ -38,7 +38,7 @@
 
         <section class="panel scan-camera-panel" aria-labelledby="camera-heading">
             <h2 id="camera-heading">Camera preview</h2>
-            <p class="notice">Camera frames are analyzed temporarily. TAYORA does not save your photo or video. One still frame may be sent to the existing face-shape endpoint when you choose “Analyze frame.”</p>
+            <p class="notice">Camera frames are analyzed temporarily. TAYORA does not save your photo or video. Three temporary still frames may be sent to the existing face-shape endpoint when you choose “Analyze frame.”</p>
             <div class="scan-video-wrap">
                 <video id="scanVideo" autoplay muted playsinline aria-label="Live camera preview"></video>
                 <div id="cameraPlaceholder" class="scan-video-placeholder">Camera is off. You can continue with manual observations.</div>
@@ -70,6 +70,7 @@
                         <option>Oval</option><option>Round</option><option>Square</option>
                         <option>Heart</option><option>Rectangular</option><option>Diamond</option>
                     </select>
+                    <p id="faceShapeSource" class="notice">Source: not selected.</p>
                 </div>
                 <div class="field">
                     <label for="hairType">Hair type</label>

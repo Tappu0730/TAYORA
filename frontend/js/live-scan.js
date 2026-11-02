@@ -16,6 +16,7 @@
     const summaryList = document.getElementById("scanSummary");
     const resultList = document.getElementById("scanResultList");
     const faceShape = document.getElementById("faceShape");
+    const faceShapeSource = document.getElementById("faceShapeSource");
     const hairType = document.getElementById("hairType");
     const bodyProfile = document.getElementById("bodyProfile");
     const scanBudget = document.getElementById("scanBudget");
@@ -23,6 +24,7 @@
     const allowedUploadTypes = new Set(["image/jpeg", "image/png", "image/webp"]);
 
     let cameraStream = null;
+    let faceShapeSourceValue = "not selected";
 
     video.hidden = true;
     placeholder.hidden = false;
@@ -40,6 +42,8 @@
     const savedHair = profile.hairType || profile.hair || "";
     if ([...faceShape.options].some((option) => option.value === savedFace || option.text === savedFace)) {
         faceShape.value = savedFace;
+        faceShapeSourceValue = "saved profile";
+        faceShapeSource.textContent = "Source: saved profile. Confirm or change it.";
     }
     if ([...hairType.options].some((option) => option.value === savedHair || option.text === savedHair)) {
         hairType.value = savedHair;
@@ -54,6 +58,11 @@
 
     const setScanStatus = (message) => {
         scanStatus.textContent = message;
+    };
+
+    const setFaceShapeSource = (source) => {
+        faceShapeSourceValue = source;
+        faceShapeSource.textContent = `Source: ${source}. Confirm or change it.`;
     };
 
     const selectedValues = (name) =>
@@ -125,7 +134,41 @@
         canvas.toBlob(resolve, "image/jpeg", 0.82);
     });
 
-    const applyFaceShapeResult = (result, statusSetter) => {
+    const requestFaceShape = async (blob, filename) => {
+        const formData = new FormData();
+        formData.append("photo", blob, filename);
+        const response = await fetch(`${apiBase}/face-shape/analyze`, {
+            method: "POST",
+            body: formData
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.detail || "Face-shape analysis failed.");
+        return result;
+    };
+
+    const stableFrameResult = (results) => {
+        const usable = results.filter(
+            (result) => result.face_detected && result.quality?.ready !== false && result.estimated_face_shape
+        );
+        if (!usable.length) return results[results.length - 1] || { face_detected: false };
+
+        const counts = new Map();
+        usable.forEach((result) => {
+            const shape = result.estimated_face_shape;
+            counts.set(shape, (counts.get(shape) || 0) + 1);
+        });
+        const ranked = [...counts.entries()].sort((left, right) => right[1] - left[1]);
+        const [shape, count] = ranked[0];
+        const tied = ranked[1]?.[1] === count;
+        return {
+            ...usable[usable.length - 1],
+            estimated_face_shape: tied ? "uncertain" : shape,
+            stable_frame_count: usable.length,
+            stable_shape_count: tied ? 0 : count
+        };
+    };
+
+    const applyFaceShapeResult = (result, statusSetter, sourceLabel) => {
         if (result.face_detected && result.estimated_face_shape) {
             const estimated = result.estimated_face_shape
                 .split(" ")
@@ -135,9 +178,14 @@
                 (option) => option.text.toLowerCase() === estimated.toLowerCase()
             );
             if (matchingOption) faceShape.value = matchingOption.value;
-            statusSetter(`Possible face-shape estimate: ${estimated}. You can change it below.`);
+            setFaceShapeSource(sourceLabel);
+            const qualityNote = result.quality?.messages?.length
+                ? ` ${result.quality.messages.join(" ")}`
+                : "";
+            statusSetter(`Possible face-shape estimate: ${estimated}. You can change it below.${qualityNote}`);
             return;
         }
+        setFaceShapeSource("not reliable");
         statusSetter("No face was detected. Choose a face shape manually or try a clearer photo.");
     };
 
@@ -151,15 +199,8 @@
         analyzeUploadButton.disabled = true;
         uploadStatus.textContent = "Analyzing one temporary photo for face shape...";
         try {
-            const formData = new FormData();
-            formData.append("photo", file, file.name);
-            const response = await fetch(`${apiBase}/face-shape/analyze`, {
-                method: "POST",
-                body: formData
-            });
-            const result = await response.json();
-            if (!response.ok) throw new Error(result.detail || "Photo analysis failed.");
-            applyFaceShapeResult(result, (message) => { uploadStatus.textContent = message; });
+            const result = await requestFaceShape(file, file.name);
+            applyFaceShapeResult(result, (message) => { uploadStatus.textContent = message; }, "uploaded photo");
         } catch (error) {
             uploadStatus.textContent = `Photo could not be analyzed: ${error.message}`;
         } finally {
@@ -181,22 +222,26 @@
             } else if (quality.average > 235) {
                 setCameraStatus("The frame is very bright. Reduce glare and try again for a clearer estimate.");
             } else {
-                setCameraStatus("Frame captured locally. Sending one temporary still image for face-shape estimation...");
+                setCameraStatus("Capturing three temporary frames for a steadier face-shape estimate...");
             }
 
-            const blob = await getFrameBlob();
-            if (!blob) throw new Error("Could not capture a frame.");
+            const frameResults = [];
+            for (let frameIndex = 0; frameIndex < 3; frameIndex += 1) {
+                if (frameIndex > 0) {
+                    await new Promise((resolve) => setTimeout(resolve, 180));
+                }
+                measureFrameQuality();
+                const blob = await getFrameBlob();
+                if (!blob) throw new Error("Could not capture a frame.");
+                frameResults.push(await requestFaceShape(blob, `live-scan-${frameIndex + 1}.jpg`));
+            }
 
-            const formData = new FormData();
-            formData.append("photo", blob, "live-scan.jpg");
-            const response = await fetch(`${apiBase}/face-shape/analyze`, {
-                method: "POST",
-                body: formData
-            });
-            const result = await response.json();
-            if (!response.ok) throw new Error(result.detail || "Face-shape analysis failed.");
-
-            applyFaceShapeResult(result, setCameraStatus);
+            const result = stableFrameResult(frameResults);
+            applyFaceShapeResult(
+                result,
+                setCameraStatus,
+                `camera (${result.stable_frame_count || 1} stable frame${result.stable_frame_count === 1 ? "" : "s"})`
+            );
 
             // Remove the temporary pixel data as soon as the request has completed.
             canvas.width = 1;
@@ -244,6 +289,7 @@
         const budget = preferences.budget == null ? "Not provided" : `₹${preferences.budget}`;
         const cards = [
             makeSummaryCard("Face shape", payload.face_shape || "Not sure"),
+            makeSummaryCard("Face shape source", payload.face_shape_source || "manual confirmation"),
             makeSummaryCard("Hair type", payload.hair_type || "Not sure"),
             makeSummaryCard("Skin observations", listValue(payload.skin_observations)),
             makeSummaryCard("Hair observations", listValue(payload.hair_observations)),
@@ -266,6 +312,7 @@
 
         const payload = {
             face_shape: faceShape.value || null,
+            face_shape_source: faceShapeSourceValue,
             skin_observations: selectedValues("skinObservation"),
             hair_type: hairType.value || null,
             hair_observations: selectedValues("hairObservation"),
@@ -303,6 +350,7 @@
     startButton.addEventListener("click", startCamera);
     stopButton.addEventListener("click", stopCamera);
     analyzeButton.addEventListener("click", analyzeFrame);
+    faceShape.addEventListener("change", () => setFaceShapeSource("manual confirmation"));
     uploadInput.addEventListener("change", () => {
         const file = uploadInput.files?.[0];
         const valid = file && allowedUploadTypes.has(file.type) && file.size <= maxUploadSize;

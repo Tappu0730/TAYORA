@@ -26,6 +26,7 @@ class ScanPreferences(BaseModel):
 
 class ScanRecommendationInput(BaseModel):
     face_shape: Optional[str] = Field(default=None, max_length=40)
+    face_shape_source: Optional[str] = Field(default=None, max_length=40)
     skin_observations: list[str] = Field(default_factory=list, max_length=8)
     hair_type: Optional[str] = Field(default=None, max_length=40)
     hair_observations: list[str] = Field(default_factory=list, max_length=8)
