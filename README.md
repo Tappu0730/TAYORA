@@ -22,7 +22,7 @@ TAYORA is a personal grooming and style guide. This local MVP includes a browser
 
    The API documentation is at `http://127.0.0.1:8000/docs`.
 
-4. Open `frontend/index.html` with VS Code Live Server. The frontend expects the API at `http://127.0.0.1:8000/api`; change `apiBaseUrl` in [config.js](frontend/js/config.js) if your setup uses another address.
+4. Open `frontend/index.html` with VS Code Live Server. The checked-in [config.js](frontend/js/config.js) points to the deployed Render API. For a local backend, change `apiBaseUrl` to `http://127.0.0.1:8000/api`.
 
 The API allows the default Live Server origins on port 5500. If your frontend uses a different port, set `CORS_ORIGINS` in `backend/.env` using the format shown in `backend/.env.example`.
 
@@ -32,6 +32,7 @@ The API allows the default Live Server origins on port 5500. If your frontend us
 - Skin-care and hair-care assessments save locally and provide general routine suggestions.
 - The dashboard requests personalized starter ideas from the FastAPI recommendation endpoint.
 - Face analysis uploads a JPG, PNG, or WebP image up to 5 MB. The API estimates face shape with MediaPipe landmarks and returns hairstyle and grooming ideas. Images are processed for the request and are not saved by the app.
+- Live Personal Scan provides an optional camera preview, local frame-lighting checks, one temporary face-shape estimate, and editable skin, hair, body-proportion, and posture observations. Confirmed labels are sent to `POST /api/scan/recommendations`; camera frames are not stored.
 - Product cards are illustrative suggestions with approximate prices. Retailer availability and other product details are not verified.
 
 ## Current limits
@@ -39,6 +40,7 @@ The API allows the default Live Server origins on port 5500. If your frontend us
 - Profiles and assessment results stay in browser storage. There is no account system, cloud sync, or connected profile database yet.
 - Recommendations use simple rules; Gemini/Groq and other AI integrations are not connected.
 - Face-shape results are approximate style prompts, not reliable measurements or medical advice. Users can edit the estimate in their profile.
+- The first Live Personal Scan version intentionally keeps skin, hair, body-proportion, and posture observations editable instead of claiming automatic diagnosis. It uses the camera for preview and face-shape estimation, while the user confirms the other observations.
 - Product catalog entries and prices are examples, not live inventory.
 - Configure deployment, HTTPS, API access controls, and production data handling before making the app public.
 

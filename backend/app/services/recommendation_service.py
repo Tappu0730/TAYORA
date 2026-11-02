@@ -162,3 +162,106 @@ def build_recommendations(profile: dict) -> list[dict]:
         })
 
     return results
+
+
+def build_scan_recommendations(scan: dict) -> list[dict]:
+    """Build cautious, non-diagnostic suggestions from user-confirmed scan labels."""
+    preferences = scan.get("preferences") or {}
+    face_shape = (scan.get("face_shape") or "").strip()
+    hair_type = (scan.get("hair_type") or "").strip()
+    skin_observations = [str(item).strip().lower() for item in scan.get("skin_observations", [])]
+    hair_observations = [str(item).strip().lower() for item in scan.get("hair_observations", [])]
+    posture_observations = [str(item).strip().lower() for item in scan.get("posture_observations", [])]
+    body_profile = (scan.get("body_profile") or "").strip()
+
+    profile = {
+        "face_shape": face_shape or None,
+        "hair_type": hair_type or None,
+        "style_preferences": preferences.get("style"),
+        "budget": preferences.get("budget"),
+    }
+    results = build_recommendations(profile)
+
+    if any("acne" in item or "pimple" in item or "blemish" in item for item in skin_observations):
+        results.insert(0, {
+            "category": "skin_care",
+            "title": "Possible blemish-prone areas",
+            "ingredients": ["salicylic acid"],
+            "description": (
+                "If this matches your skin, consider a gentle salicylic-acid product "
+                "according to its label. Introduce one new product at a time and stop "
+                "if irritation occurs. Persistent, painful, or worsening breakouts "
+                "deserve advice from a dermatologist."
+            ),
+        })
+    elif any("oil" in item for item in skin_observations):
+        results.insert(0, {
+            "category": "skin_care",
+            "title": "Possible excess-oil areas",
+            "ingredients": ["niacinamide"],
+            "description": (
+                "Consider a gentle cleanser and a lightweight, non-comedogenic moisturizer. "
+                "A niacinamide product may suit some people; introduce it gradually."
+            ),
+        })
+    elif any("dry" in item or "flak" in item for item in skin_observations):
+        results.insert(0, {
+            "category": "skin_care",
+            "title": "Possible dry or flaky areas",
+            "ingredients": ["glycerin", "ceramides"],
+            "description": (
+                "Consider a gentle cleanser and a fragrance-free moisturizer with "
+                "hydrating or barrier-supporting ingredients."
+            ),
+        })
+    elif any("texture" in item or "uneven" in item for item in skin_observations):
+        results.insert(0, {
+            "category": "skin_care",
+            "title": "Possible uneven texture",
+            "ingredients": ["broad-spectrum sunscreen"],
+            "description": (
+                "Keep the routine gentle and use broad-spectrum sunscreen. Avoid adding "
+                "several exfoliating products at once."
+            ),
+        })
+
+    if hair_type and hair_type.lower() not in {"not sure", "unsure"}:
+        results.append({
+            "category": "hair_care",
+            "title": f"Care ideas for {hair_type.lower()} hair",
+            "description": (
+                f"Choose products that work with your {hair_type.lower()} texture and "
+                "adjust based on scalp comfort and how your hair responds."
+            ),
+        })
+
+    if any("frizz" in item or "dry" in item for item in hair_observations):
+        results.append({
+            "category": "hair_care",
+            "title": "Manageability and moisture",
+            "description": "A conditioner or suitable leave-in product may help with dryness or frizz. Apply mainly to lengths and ends.",
+        })
+
+    if body_profile and body_profile.lower() not in {"not sure", "unsure"}:
+        results.append({
+            "category": "style",
+            "title": "Fit ideas based on your selected proportions",
+            "description": (
+                f"Use your selected '{body_profile}' description as a styling reference. "
+                "Try balanced fits, comfortable layers, and proportions you enjoy; "
+                "the scan is not a judgment about your body."
+            ),
+        })
+
+    if posture_observations and not all(item in {"neutral", "not sure", "unsure"} for item in posture_observations):
+        results.append({
+            "category": "posture",
+            "title": "Posture awareness",
+            "description": (
+                "Try gentle posture awareness: relax your shoulders, keep the screen at eye level, "
+                "and take movement breaks. Pain, numbness, weakness, or persistent discomfort "
+                "should be discussed with a qualified healthcare professional."
+            ),
+        })
+
+    return results

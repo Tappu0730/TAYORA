@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Live Personal Scan — TAYORA</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header class="site-header">
+        <a class="brand" href="../index.html">TAYORA<span>.</span></a>
+        <nav>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="profile.html">My profile</a>
+        </nav>
+    </header>
+
+    <main class="page-wrap scan-page">
+        <p class="eyebrow">OPTIONAL CAMERA TOOL</p>
+        <h1>Live personal scan</h1>
+        <p class="page-intro">
+            Use your camera as one input for style and grooming ideas. The camera is optional,
+            results are estimates, and you can edit every observation before recommendations are made.
+        </p>
+
+        <section class="panel scan-camera-panel" aria-labelledby="camera-heading">
+            <h2 id="camera-heading">Camera preview</h2>
+            <p class="notice">Camera frames are analyzed temporarily. TAYORA does not save your photo or video. One still frame may be sent to the existing face-shape endpoint when you choose “Analyze frame.”</p>
+            <div class="scan-video-wrap">
+                <video id="scanVideo" autoplay muted playsinline aria-label="Live camera preview"></video>
+                <div id="cameraPlaceholder" class="scan-video-placeholder">Camera is off. You can continue with manual observations.</div>
+            </div>
+            <canvas id="scanCanvas" hidden></canvas>
+            <p id="cameraStatus" class="notice" role="status" aria-live="polite">Camera is optional.</p>
+            <div class="scan-actions">
+                <button id="startCameraButton" class="button" type="button">Start camera</button>
+                <button id="analyzeFrameButton" class="button" type="button" disabled>Analyze frame</button>
+                <button id="stopCameraButton" class="button button-secondary" type="button" disabled>Stop camera</button>
+            </div>
+        </section>
+
+        <section class="panel" aria-labelledby="observations-heading">
+            <h2 id="observations-heading">Confirm your observations</h2>
+            <p class="page-intro">Automatic visual estimates are limited. Select what seems relevant and change anything that does not describe you.</p>
+
+            <div class="form-grid">
+                <div class="field">
+                    <label for="faceShape">Face shape estimate</label>
+                    <select id="faceShape">
+                        <option value="">Not sure</option>
+                        <option>Oval</option><option>Round</option><option>Square</option>
+                        <option>Heart</option><option>Oblong</option><option>Diamond</option>
+                        <option>Round or square</option><option>Round or oval</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="hairType">Hair type</label>
+                    <select id="hairType">
+                        <option value="">Not sure</option>
+                        <option>Straight</option><option>Wavy</option><option>Curly</option><option>Coily</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="bodyProfile">Body proportions for styling</label>
+                    <select id="bodyProfile">
+                        <option value="">Not sure</option>
+                        <option>Balanced proportions</option>
+                        <option>Broader upper body</option>
+                        <option>Fuller lower body</option>
+                        <option>Straighter proportions</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="scanBudget">Optional budget (₹)</label>
+                    <input id="scanBudget" type="number" min="0" placeholder="e.g. 1500">
+                </div>
+            </div>
+
+            <div class="scan-check-grid">
+                <fieldset>
+                    <legend>Possible visible skin observations</legend>
+                    <label><input type="checkbox" name="skinObservation" value="possible acne-prone areas"> Possible blemish-prone areas</label>
+                    <label><input type="checkbox" name="skinObservation" value="possible oiliness"> Possible excess oil</label>
+                    <label><input type="checkbox" name="skinObservation" value="possible dryness"> Possible dryness or flaking</label>
+                    <label><input type="checkbox" name="skinObservation" value="possible uneven texture"> Possible uneven texture</label>
+                </fieldset>
+                <fieldset>
+                    <legend>Hair observations</legend>
+                    <label><input type="checkbox" name="hairObservation" value="frizz"> Frizz</label>
+                    <label><input type="checkbox" name="hairObservation" value="dryness"> Dryness</label>
+                    <label><input type="checkbox" name="hairObservation" value="breakage"> Breakage</label>
+                </fieldset>
+                <fieldset>
+                    <legend>Posture observations</legend>
+                    <label><input type="checkbox" name="postureObservation" value="neutral"> Feels neutral</label>
+                    <label><input type="checkbox" name="postureObservation" value="possible forward head"> Possible forward head</label>
+                    <label><input type="checkbox" name="postureObservation" value="possible rounded shoulders"> Possible rounded shoulders</label>
+                    <label><input type="checkbox" name="postureObservation" value="possible uneven shoulder height"> Possible uneven shoulder height</label>
+                </fieldset>
+            </div>
+
+            <div class="form-actions">
+                <button id="recommendButton" class="button" type="button">Get my suggestions</button>
+            </div>
+            <p id="scanStatus" class="notice" role="status" aria-live="polite">Your selections stay editable until you request suggestions.</p>
+        </section>
+
+        <section id="scanResults" class="panel" hidden aria-labelledby="scan-results-heading">
+            <h2 id="scan-results-heading">Your scan-based suggestions</h2>
+            <div id="scanResultList" class="cards"></div>
+            <p class="notice">These suggestions are general style and grooming guidance based on uncertain observations. Persistent or painful skin concerns should be reviewed by a dermatologist. Pain, numbness, weakness, or persistent posture discomfort should be reviewed by a healthcare professional.</p>
+        </section>
+    </main>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/live-scan.js"></script>
+</body>
+</html>

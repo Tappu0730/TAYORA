@@ -18,3 +18,18 @@ class ProfileInput(BaseModel):
 class RecommendationInput(ProfileInput):
     face_shape: str | None = None
 
+
+class ScanPreferences(BaseModel):
+    budget: Optional[float] = Field(default=None, ge=0)
+    style: Optional[str] = Field(default=None, max_length=40)
+
+
+class ScanRecommendationInput(BaseModel):
+    face_shape: Optional[str] = Field(default=None, max_length=40)
+    skin_observations: list[str] = Field(default_factory=list, max_length=8)
+    hair_type: Optional[str] = Field(default=None, max_length=40)
+    hair_observations: list[str] = Field(default_factory=list, max_length=8)
+    body_profile: Optional[str] = Field(default=None, max_length=60)
+    posture_observations: list[str] = Field(default_factory=list, max_length=8)
+    preferences: ScanPreferences = Field(default_factory=ScanPreferences)
+
