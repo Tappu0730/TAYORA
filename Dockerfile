@@ -1,6 +1,8 @@
 FROM python:3.11-slim
 
-RUN apt-get update && apt-get install -y \
+# Install system libraries required by MediaPipe
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libegl1 \
     libgles2 \
     libgl1 \
     libglib2.0-0 \
@@ -13,4 +15,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-CMD ["uvicorn", "main:app", "--app-dir", "backend", "--host", "0.0.0.0", "--port", "10000"]
+# Use Render's PORT environment variable
+CMD ["sh", "-c", "uvicorn main:app --app-dir backend --host 0.0.0.0 --port ${PORT:-10000}"]
