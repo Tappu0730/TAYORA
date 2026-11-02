@@ -11,11 +11,17 @@ DATABASE_URL = os.getenv(
     "DATABASE_URL",
     f"sqlite:///{DEFAULT_DATABASE_PATH.as_posix()}",
 )
-CORS_ORIGINS = [
+configured_cors_origins = [
     origin.strip()
-    for origin in os.getenv(
-        "CORS_ORIGINS",
-        "http://127.0.0.1:5500,http://localhost:5500,https://tappu0730.github.io",
-    ).split(",")
+    for origin in os.getenv("CORS_ORIGINS", "").split(",")
     if origin.strip()
 ]
+
+# Keep the production frontend reachable even when an older Render
+# environment variable overrides the local default value.
+required_cors_origins = {
+    "http://127.0.0.1:5500",
+    "http://localhost:5500",
+    "https://tappu0730.github.io",
+}
+CORS_ORIGINS = sorted(set(configured_cors_origins) | required_cors_origins)
