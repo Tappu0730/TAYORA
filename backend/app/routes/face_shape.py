@@ -59,7 +59,9 @@ async def analyze_face_shape(photo: UploadFile = File(...)):
                 detail="Image dimensions must be 20 megapixels or smaller.",
             )
         image = ImageOps.exif_transpose(image).convert("RGB")
-        image_array = np.array(image)
+image_array = np.ascontiguousarray(
+    np.asarray(image, dtype=np.uint8)
+)
     except (UnidentifiedImageError, OSError, ValueError, Image.DecompressionBombError):
         raise HTTPException(
             status_code=400,
@@ -91,7 +93,11 @@ async def analyze_face_shape(photo: UploadFile = File(...)):
         ) as landmarker:
             result = landmarker.detect(mp_image)
 
-    except (RuntimeError, ValueError, OSError) as exc:
+    except Exception as exc:
+    raise HTTPException(
+        status_code=500,
+        detail=f"Face-landmark analysis failed: {type(exc).__name__}: {exc}",
+    ) from exc
         raise HTTPException(
             status_code=500,
             detail=f"Face-landmark analysis failed: {exc}",
