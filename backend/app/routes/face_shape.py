@@ -155,22 +155,24 @@ async def analyze_face_shape(photo: UploadFile = File(...)):
         forehead_ratio = forehead_width / cheekbone_width
         jaw_ratio = jaw_width / cheekbone_width
 
-        # A slightly conservative oblong cutoff reduces false positives from
-        # camera perspective, head tilt, and a close crop. Borderline faces
-        # are better represented as oval than as a definitive oblong result.
-        if length_ratio > 1.60:
+        # Use several proportions instead of face length alone. This keeps a
+        # close camera crop from making every face look oblong or oval.
+        if length_ratio > 1.58 and jaw_ratio < 0.95:
             face_shape = "oblong"
 
-        elif length_ratio < 1.15 and jaw_ratio > 0.85:
-            face_shape = "round or square"
-
-        elif forehead_ratio > 1.05 and jaw_ratio < 0.80:
+        elif forehead_ratio >= 1.00 and jaw_ratio <= 0.82:
             face_shape = "heart"
 
-        elif jaw_ratio > 0.90 and length_ratio >= 1.15:
+        elif jaw_ratio >= 0.88 and length_ratio < 1.30:
+            face_shape = "round"
+
+        elif jaw_ratio >= 0.88 and length_ratio < 1.55:
             face_shape = "square"
 
-        elif length_ratio >= 1.25:
+        elif forehead_ratio < 0.90 and jaw_ratio < 0.84:
+            face_shape = "diamond"
+
+        elif length_ratio >= 1.22:
             face_shape = "oval"
 
         else:
