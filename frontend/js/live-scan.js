@@ -13,6 +13,7 @@
     const uploadStatus = document.getElementById("uploadStatus");
     const recommendButton = document.getElementById("recommendButton");
     const resultsSection = document.getElementById("scanResults");
+    const summaryList = document.getElementById("scanSummary");
     const resultList = document.getElementById("scanResultList");
     const faceShape = document.getElementById("faceShape");
     const hairType = document.getElementById("hairType");
@@ -226,6 +227,34 @@
         return card;
     };
 
+    const makeSummaryCard = (label, value) => {
+        const card = document.createElement("article");
+        card.className = "mini-card";
+        const title = document.createElement("h3");
+        title.textContent = label;
+        const detail = document.createElement("p");
+        detail.textContent = value;
+        card.append(title, detail);
+        return card;
+    };
+
+    const renderScanSummary = (payload) => {
+        const preferences = payload.preferences || {};
+        const listValue = (values) => values?.length ? values.join(", ") : "None confirmed";
+        const budget = preferences.budget == null ? "Not provided" : `₹${preferences.budget}`;
+        const cards = [
+            makeSummaryCard("Face shape", payload.face_shape || "Not sure"),
+            makeSummaryCard("Hair type", payload.hair_type || "Not sure"),
+            makeSummaryCard("Skin observations", listValue(payload.skin_observations)),
+            makeSummaryCard("Hair observations", listValue(payload.hair_observations)),
+            makeSummaryCard("Body proportions", payload.body_profile || "Not sure"),
+            makeSummaryCard("Posture observations", listValue(payload.posture_observations)),
+            makeSummaryCard("Budget", budget)
+        ];
+        summaryList.replaceChildren(...cards);
+        summaryList.hidden = false;
+    };
+
     const getRecommendations = async () => {
         const budgetValue = scanBudget.value.trim();
         const budget = budgetValue === "" ? null : Number(budgetValue);
@@ -259,6 +288,7 @@
             const result = await response.json();
             if (!response.ok) throw new Error(result.detail || "Recommendations could not be loaded.");
 
+            renderScanSummary(result.scan_summary || payload);
             resultList.replaceChildren(...(result.recommendations || []).map(makeResultCard));
             resultsSection.hidden = false;
             setScanStatus("Suggestions are ready. Review them as general guidance and adjust your observations whenever needed.");
