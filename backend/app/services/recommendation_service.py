@@ -19,6 +19,10 @@ def build_recommendations(profile: dict) -> list[dict]:
     face_shape = (
         profile.get("face_shape") or "unknown"
     ).strip().lower()
+    if face_shape == "oblong":
+        # Backward compatibility for profiles created before the taxonomy
+        # changed the user-facing label to rectangular.
+        face_shape = "rectangular"
 
     results = [
         {
@@ -74,7 +78,7 @@ def build_recommendations(profile: dict) -> list[dict]:
             "Consider a textured crop, side part, or slightly "
             "longer layered style."
         ),
-        "oblong": (
+        "rectangular": (
             "Try a side part, textured fringe, or a style with "
             "some width. Avoid adding too much height if you "
             "want to balance facial proportions."
@@ -111,7 +115,7 @@ def build_recommendations(profile: dict) -> list[dict]:
             "Try even stubble or a short beard with softly "
             "rounded edges if you want a less angular look."
         ),
-        "oblong": (
+        "rectangular": (
             "Consider even stubble or a fuller beard at the "
             "sides rather than extra length at the chin."
         ),

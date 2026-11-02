@@ -156,9 +156,9 @@ async def analyze_face_shape(photo: UploadFile = File(...)):
         jaw_ratio = jaw_width / cheekbone_width
 
         # Use several proportions instead of face length alone. This keeps a
-        # close camera crop from making every face look oblong or oval.
+        # close camera crop from making every face look rectangular or oval.
         if length_ratio > 1.58 and jaw_ratio < 0.95:
-            face_shape = "oblong"
+            face_shape = "rectangular"
 
         elif forehead_ratio >= 1.00 and jaw_ratio <= 0.82:
             face_shape = "heart"
@@ -176,7 +176,7 @@ async def analyze_face_shape(photo: UploadFile = File(...)):
             face_shape = "oval"
 
         else:
-            face_shape = "round or oval"
+            face_shape = "uncertain"
 
     # Return analysis result
     return {
