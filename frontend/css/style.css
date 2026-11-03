@@ -1491,3 +1491,116 @@ body:not(.home-page) > main.panel > p:not(.eyebrow) {
         margin-top: 46px;
     }
 }
+
+/* Content cards and text wrapping. These rules keep long recommendation text
+   readable instead of letting it push outside a card on narrow screens. */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin: 24px 0;
+}
+
+.mini-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+    min-height: 170px;
+    padding: 22px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: var(--white);
+}
+
+.mini-card h3,
+.mini-card p,
+.mini-card a,
+.mini-card span {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: normal;
+}
+
+.mini-card h3 {
+    margin: 13px 0 8px;
+    color: var(--green);
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1.2;
+}
+
+.mini-card p {
+    margin: 0 0 15px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.65;
+}
+
+.mini-card a {
+    margin-top: auto;
+    color: var(--green);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.pill {
+    display: inline-flex;
+    align-items: center;
+    max-width: 100%;
+    padding: 6px 10px;
+    border: 1px solid rgba(201, 169, 110, .35);
+    border-radius: 999px;
+    background: #f1eadc;
+    color: #75603a;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+
+body:not(.home-page) p,
+body:not(.home-page) label,
+body:not(.home-page) legend,
+body:not(.home-page) li,
+body:not(.home-page) button,
+body:not(.home-page) a {
+    overflow-wrap: anywhere;
+}
+
+body:not(.home-page) .panel > p,
+body:not(.home-page) .panel > h2,
+body:not(.home-page) .panel > h3,
+body:not(.home-page) section > p {
+    max-width: 100%;
+}
+
+body:not(.home-page) .scan-video-wrap,
+body:not(.home-page) .scan-video-wrap video,
+body:not(.home-page) canvas {
+    max-width: 100%;
+}
+
+@media (max-width: 560px) {
+    .cards,
+    body:not(.home-page) .cards {
+        grid-template-columns: 1fr;
+    }
+
+    .mini-card {
+        min-height: 0;
+        padding: 19px;
+    }
+
+    .mini-card h3 {
+        font-size: 20px;
+    }
+
+    body:not(.home-page) .panel h2 {
+        font-size: clamp(25px, 7vw, 34px);
+        line-height: 1.15;
+    }
+}
