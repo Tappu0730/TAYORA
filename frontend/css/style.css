@@ -140,23 +140,6 @@ a {
   gap: 25px;
 }
 
-.hero-points {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 9px;
-  margin-top: 25px;
-  color: var(--muted);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.4px;
-}
-
-.hero-points i {
-  color: var(--gold);
-  font-style: normal;
-}
-
 .button {
   display: inline-flex;
   align-items: center;
@@ -223,28 +206,6 @@ a {
   font-family: 'Playfair Display', serif;
   font-size: 190px;
   line-height: 1;
-}
-
-.hero-scan-label {
-  position: absolute;
-  top: 27px;
-  left: 30px;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  color: rgba(255, 255, 255, 0.75);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 1.8px;
-}
-
-.scan-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #d6b777;
-  box-shadow: 0 0 0 4px rgba(214, 183, 119, 0.14);
 }
 
 .orb {
@@ -320,15 +281,6 @@ a {
   font-size: 9px;
   letter-spacing: 3px;
   white-space: nowrap;
-}
-
-.hero-privacy {
-  position: absolute;
-  right: 30px;
-  bottom: 8px;
-  z-index: 2;
-  color: rgba(255, 255, 255, 0.66);
-  font-size: 10px;
 }
 
 .section {
