@@ -15,6 +15,7 @@
         <nav>
             <a href="dashboard.html">Dashboard</a>
             <a href="products.html">Products</a>
+            <a href="wardrobe.html">My wardrobe</a>
         </nav>
     </header>
 
@@ -89,6 +90,18 @@
             <div id="fashion-results" class="cards"></div>
         </section>
 
+        <section class="panel" aria-labelledby="saved-looks-heading">
+            <h2 id="saved-looks-heading">Saved looks</h2>
+            <p id="saved-looks-status" class="notice">Save an outfit you like and it will stay in this browser.</p>
+            <div id="saved-looks" class="cards"></div>
+        </section>
+
+        <section class="panel">
+            <h2>Build your digital wardrobe</h2>
+            <p>Add a few clothing items manually, then use them as a personal reference while choosing an outfit.</p>
+            <a class="button" href="wardrobe.html">Open my wardrobe →</a>
+        </section>
+
         <section class="panel">
             <h2>Style inspiration</h2>
 
@@ -124,8 +137,77 @@
         const fashionForm = document.getElementById("fashion-form");
         const fashionResults = document.getElementById("fashion-results");
         const fashionStatus = document.getElementById("fashion-status");
+        const savedLooks = document.getElementById("saved-looks");
+        const savedLooksStatus = document.getElementById("saved-looks-status");
+        const SAVED_LOOKS_KEY = "tayoraSavedLooks";
+        const STYLE_FEEDBACK_KEY = "tayoraStyleFeedback";
 
         const apiBase = window.TAYORA_CONFIG?.apiBaseUrl || "http://127.0.0.1:8000/api";
+
+        const readStorage = (key, fallback) => {
+            try {
+                return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback));
+            } catch {
+                return fallback;
+            }
+        };
+
+        const writeStorage = (key, value) => {
+            localStorage.setItem(key, JSON.stringify(value));
+        };
+
+        const renderSavedLooks = () => {
+            const looks = readStorage(SAVED_LOOKS_KEY, []);
+            savedLooks.replaceChildren();
+            if (!looks.length) {
+                savedLooksStatus.textContent = "No saved looks yet. Generate an outfit and choose Save look.";
+                return;
+            }
+            savedLooksStatus.textContent = `${looks.length} saved look${looks.length === 1 ? "" : "s"} in this browser.`;
+            looks.forEach((look) => {
+                const card = document.createElement("article");
+                card.className = "mini-card saved-look-card";
+                const tag = document.createElement("span");
+                tag.className = "pill";
+                tag.textContent = "SAVED LOOK";
+                const title = document.createElement("h3");
+                title.textContent = look.title;
+                const description = document.createElement("p");
+                description.textContent = look.description;
+                const details = document.createElement("p");
+                details.textContent = look.details;
+                const remove = document.createElement("button");
+                remove.type = "button";
+                remove.className = "text-button";
+                remove.textContent = "Remove";
+                remove.addEventListener("click", () => {
+                    writeStorage(SAVED_LOOKS_KEY, looks.filter((item) => item.id !== look.id));
+                    renderSavedLooks();
+                });
+                card.append(tag, title, description, details, remove);
+                savedLooks.appendChild(card);
+            });
+        };
+
+        const saveLook = (recommendation, preferences, button) => {
+            const looks = readStorage(SAVED_LOOKS_KEY, []);
+            const alreadySaved = looks.some((look) => look.title === recommendation.title && look.details === recommendation.details);
+            if (!alreadySaved) {
+                looks.unshift({
+                    id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+                    title: recommendation.title,
+                    description: recommendation.description,
+                    details: recommendation.details,
+                    preferences
+                });
+                writeStorage(SAVED_LOOKS_KEY, looks.slice(0, 20));
+            }
+            button.textContent = "Saved ✓";
+            button.disabled = true;
+            renderSavedLooks();
+        };
+
+        renderSavedLooks();
 
         fashionForm.addEventListener("submit", async function (event) {
             event.preventDefault();
@@ -172,7 +254,31 @@
                     const details = document.createElement("p");
                     details.textContent = recommendation.details;
 
-                    card.append(tag, heading, description, details);
+                    const actions = document.createElement("div");
+                    actions.className = "inline-actions";
+                    const saveButton = document.createElement("button");
+                    saveButton.type = "button";
+                    saveButton.className = "button button-small";
+                    saveButton.textContent = "Save look";
+                    saveButton.addEventListener("click", () => saveLook(
+                        recommendation,
+                        { occasion, colour, budget, comfort },
+                        saveButton
+                    ));
+                    const feedbackButton = document.createElement("button");
+                    feedbackButton.type = "button";
+                    feedbackButton.className = "text-button";
+                    feedbackButton.textContent = "Not for me";
+                    feedbackButton.addEventListener("click", () => {
+                        const feedback = readStorage(STYLE_FEEDBACK_KEY, []);
+                        feedback.push({ title: recommendation.title, preference: { occasion, colour, budget, comfort }, at: Date.now() });
+                        writeStorage(STYLE_FEEDBACK_KEY, feedback.slice(-50));
+                        feedbackButton.textContent = "Feedback saved";
+                        feedbackButton.disabled = true;
+                    });
+                    actions.append(saveButton, feedbackButton);
+
+                    card.append(tag, heading, description, details, actions);
                     fashionResults.appendChild(card);
                 });
 

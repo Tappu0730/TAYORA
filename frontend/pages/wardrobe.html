@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My Wardrobe — TAYORA</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header class="site-header">
+        <a class="brand" href="../index.html">TAYORA<span>.</span></a>
+        <nav>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="fashion.html">Fashion</a>
+            <a href="products.html">Products</a>
+        </nav>
+    </header>
+
+    <main class="page-wrap">
+        <p class="eyebrow">YOUR DIGITAL WARDROBE</p>
+        <h1>Keep track of what you own.</h1>
+        <p class="page-intro">Add clothing items manually and use them as a reference when planning outfits. These tags stay in this browser and no clothing photo is uploaded.</p>
+
+        <section class="panel">
+            <h2>Add an item</h2>
+            <form id="wardrobe-form">
+                <div class="form-grid">
+                    <div class="field">
+                        <label for="itemName">Item name</label>
+                        <input id="itemName" type="text" maxlength="60" placeholder="e.g. White Oxford shirt" required>
+                    </div>
+                    <div class="field">
+                        <label for="itemCategory">Category</label>
+                        <select id="itemCategory">
+                            <option value="top">Top</option>
+                            <option value="bottom">Bottom</option>
+                            <option value="outerwear">Outerwear</option>
+                            <option value="footwear">Footwear</option>
+                            <option value="accessory">Accessory</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="itemColour">Colour</label>
+                        <select id="itemColour">
+                            <option value="black">Black</option>
+                            <option value="white">White</option>
+                            <option value="blue">Blue</option>
+                            <option value="beige">Beige</option>
+                            <option value="green">Green</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="itemOccasion">Best for</label>
+                        <select id="itemOccasion">
+                            <option value="everyday">Everyday</option>
+                            <option value="college">College</option>
+                            <option value="formal">Formal</option>
+                            <option value="party">Party</option>
+                            <option value="traditional">Traditional</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="button" type="submit">Add to wardrobe</button>
+            </form>
+            <p id="wardrobe-status" class="notice" role="status" aria-live="polite">No items added yet.</p>
+        </section>
+
+        <section class="panel">
+            <h2>My items</h2>
+            <div id="wardrobe-list" class="cards"></div>
+        </section>
+    </main>
+    <script src="../js/wardrobe.js"></script>
+</body>
+</html>
