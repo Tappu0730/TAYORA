@@ -50,7 +50,11 @@
                 const result = await response.json();
                 if (!response.ok) throw new Error(result.detail || "Sign in failed.");
                 window.TAYORA_AUTH.setSession(result);
-                window.location.href = "dashboard.html";
+                const requestedPage = new URLSearchParams(window.location.search).get("next");
+                const safePage = requestedPage && /^[a-z0-9_-]+\.html(?:\?.*)?$/i.test(requestedPage)
+                    ? requestedPage
+                    : "dashboard.html";
+                window.location.href = safePage;
             } catch (error) {
                 loginStatus.textContent = error.message;
             }
