@@ -1,0 +1,28 @@
+# Render Blueprint for a persistent TAYORA deployment.
+# Import this file from the Render dashboard (New -> Blueprint) or sync it
+# with the existing service. Do not commit database credentials manually.
+services:
+  - type: web
+    name: tayora
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --app-dir backend --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: tayora-db
+          property: connectionString
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "10080"
+      - key: CORS_ORIGINS
+        value: https://tappu0730.github.io
+
+databases:
+  - name: tayora-db
+    plan: free
+    databaseName: tayora
+    user: tayora

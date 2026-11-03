@@ -38,6 +38,8 @@ https://tappu0730.github.io/TAYORA/
 
 The frontend is configured to call the deployed Render API. If the Render service has an explicit `CORS_ORIGINS` environment variable, include `https://tappu0730.github.io` there as well.
 
+For a persistent production account database, use the checked-in [Render Blueprint](render.yaml) and follow [the production deployment guide](docs/production-deployment.md). It provisions Render Postgres, wires `DATABASE_URL`, generates `JWT_SECRET_KEY`, and configures the GitHub Pages CORS origin. Do not use the default SQLite database for public accounts.
+
 ## What works
 
 - Profile preferences save in the current browser and appear on the dashboard.
