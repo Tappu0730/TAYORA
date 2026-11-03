@@ -50,7 +50,9 @@ const products = [
         price: 300,
         concerns: ["oiliness", "acne", "sensitivity"],
         skinTypes: ["oily", "combination", "normal"],
-        description: "Consider a lightweight, non-comedogenic moisturiser if it suits your skin."
+        description: "Consider a lightweight, non-comedogenic moisturiser if it suits your skin.",
+        productUrl: "https://www.amazon.in/s?k=lightweight+non+comedogenic+facial+moisturiser",
+        linkLabel: "Search options →"
     },
     {
         name: "Moisturising face cream",
@@ -58,7 +60,9 @@ const products = [
         price: 350,
         concerns: ["dryness", "sensitivity"],
         skinTypes: ["dry", "normal"],
-        description: "Explore a moisturiser that helps support the skin barrier."
+        description: "Explore a moisturiser that helps support the skin barrier.",
+        productUrl: "https://www.amazon.in/s?k=moisturising+face+cream+for+dry+skin",
+        linkLabel: "Search options →"
     },
     {
         name: "Broad-spectrum sunscreen",
@@ -66,7 +70,9 @@ const products = [
         price: 400,
         concerns: ["all"],
         skinTypes: ["oily", "dry", "normal", "combination", "unsure"],
-        description: "Look for broad-spectrum SPF 30 or higher that feels comfortable on your skin."
+        description: "Look for broad-spectrum SPF 30 or higher that feels comfortable on your skin.",
+        productUrl: "https://www.amazon.in/s?k=broad+spectrum+sunscreen+spf+30",
+        linkLabel: "Search options →"
     },
     {
         name: "Gentle everyday shampoo",
@@ -76,7 +82,9 @@ const products = [
         scalpTypes: ["oily", "normal", "unsure"],
         hairTypes: ["straight", "wavy", "curly", "coily", "unsure"],
         goals: ["healthy", "volume"],
-        description: "Choose a shampoo suited to your scalp and hair-washing routine."
+        description: "Choose a shampoo suited to your scalp and hair-washing routine.",
+        productUrl: "https://www.amazon.in/s?k=gentle+everyday+shampoo",
+        linkLabel: "Search options →"
     },
     {
         name: "Conditioner for dry hair",
@@ -86,7 +94,9 @@ const products = [
         scalpTypes: ["dry", "normal", "sensitive", "unsure"],
         hairTypes: ["wavy", "curly", "coily", "straight", "unsure"],
         goals: ["healthy", "smooth", "moisture"],
-        description: "A conditioner may help soften hair and reduce friction. Apply mainly to the lengths and ends."
+        description: "A conditioner may help soften hair and reduce friction. Apply mainly to the lengths and ends.",
+        productUrl: "https://www.amazon.in/s?k=conditioner+for+dry+hair",
+        linkLabel: "Search options →"
     },
     {
         name: "Leave-in hair conditioner",
@@ -96,7 +106,9 @@ const products = [
         scalpTypes: ["dry", "normal", "sensitive", "unsure"],
         hairTypes: ["wavy", "curly", "coily", "straight", "unsure"],
         goals: ["smooth", "moisture"],
-        description: "Consider a leave-in conditioner for extra softness and manageability."
+        description: "Consider a leave-in conditioner for extra softness and manageability.",
+        productUrl: "https://www.amazon.in/s?k=leave+in+conditioner+for+hair",
+        linkLabel: "Search options →"
     },
     {
         name: "Anti-dandruff shampoo",
@@ -106,7 +118,9 @@ const products = [
         scalpTypes: ["oily", "dry", "normal", "sensitive", "unsure"],
         hairTypes: ["straight", "wavy", "curly", "coily", "unsure"],
         goals: ["healthy"],
-        description: "If you have persistent dandruff, look for an appropriate anti-dandruff active ingredient and follow its label directions."
+        description: "If you have persistent dandruff, look for an appropriate anti-dandruff active ingredient and follow its label directions.",
+        productUrl: "https://www.amazon.in/s?k=anti+dandruff+shampoo",
+        linkLabel: "Search options →"
     }
 ];
 
@@ -253,7 +267,7 @@ if (product === filteredProducts[0]) {
         if (product.productUrl) {
             const productLink = document.createElement("a");
             productLink.href = product.productUrl;
-            productLink.textContent = "View product →";
+            productLink.textContent = product.linkLabel || "View product →";
             productLink.target = "_blank";
             productLink.rel = "noopener noreferrer";
             productLink.className = "product-link";
