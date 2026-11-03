@@ -160,11 +160,13 @@
         const ranked = [...counts.entries()].sort((left, right) => right[1] - left[1]);
         const [shape, count] = ranked[0];
         const tied = ranked[1]?.[1] === count;
+        const stable = usable.length >= 2 && !tied && count >= 2;
         return {
             ...usable[usable.length - 1],
-            estimated_face_shape: tied ? "uncertain" : shape,
+            estimated_face_shape: stable ? shape : "uncertain",
             stable_frame_count: usable.length,
-            stable_shape_count: tied ? 0 : count
+            stable_shape_count: stable ? count : 0,
+            stability: stable ? "stable" : "insufficient_consistency"
         };
     };
 
@@ -242,6 +244,9 @@
                 setCameraStatus,
                 `camera (${result.stable_frame_count || 1} stable frame${result.stable_frame_count === 1 ? "" : "s"})`
             );
+            if (result.stability !== "stable") {
+                setCameraStatus("The frames did not agree enough for a reliable face-shape estimate. Improve lighting and framing, then try again; you can also choose a shape manually.");
+            }
 
             // Remove the temporary pixel data as soon as the request has completed.
             canvas.width = 1;

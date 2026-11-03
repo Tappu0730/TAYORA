@@ -41,6 +41,7 @@ The frontend is configured to call the deployed Render API. If the Render servic
 - Profile preferences save in the current browser and appear on the dashboard.
 - Skin-care and hair-care assessments save locally and provide general routine suggestions.
 - The dashboard requests personalized starter ideas from the FastAPI recommendation endpoint.
+- Live camera face-shape smoothing requires at least two of three valid frames to agree; otherwise the result stays `uncertain` and the user can confirm a value manually.
 - The Fashion page sends occasion, colour, style, and budget to `POST /api/fashion/recommendations`; the FastAPI service returns two rule-based outfit ideas as JSON.
 - Face analysis uploads a JPG, PNG, or WebP image up to 5 MB. The API estimates one of six style categories (oval, round, square, rectangular, heart, or diamond) with MediaPipe landmarks and can return an uncertain result when proportions are ambiguous. Images are processed for the request and are not saved by the app.
 - Live Personal Scan provides an optional camera preview, three-frame face-shape smoothing, basic lighting/framing/pose quality gates, an optional temporary photo upload, and editable skin, hair, body-proportion, and posture observations. Confirmed labels are sent to `POST /api/scan/recommendations`; camera frames and uploaded photos are not stored.

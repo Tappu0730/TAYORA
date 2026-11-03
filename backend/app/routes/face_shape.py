@@ -248,6 +248,7 @@ async def analyze_face_shape(photo: UploadFile = File(...)):
         "analysis_status": "completed",
         "face_detected": True,
         "landmark_count": len(landmarks),
+        "estimate_method": "MediaPipe landmarks with geometric ratio rules",
         "estimated_face_shape": face_shape,
         "quality": quality,
         "message": (
