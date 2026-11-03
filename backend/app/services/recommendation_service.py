@@ -269,3 +269,55 @@ def build_scan_recommendations(scan: dict) -> list[dict]:
         })
 
     return results
+
+
+def build_fashion_recommendations(request: dict) -> list[dict]:
+    """Build starter outfit ideas from the user's selected fashion inputs."""
+    outfit_ideas = {
+        "everyday": [
+            ("Casual everyday look", "Pair a comfortable T-shirt with jeans and sneakers."),
+            ("Relaxed look", "Try a casual shirt with trousers and comfortable shoes."),
+        ],
+        "college": [
+            ("College casual", "Try straight-fit jeans, a simple top and sneakers."),
+            ("Smart college look", "Combine a shirt, relaxed trousers and a casual bag."),
+        ],
+        "formal": [
+            ("Office-ready look", "Pair a formal shirt with tailored trousers and clean shoes."),
+            ("Minimal formal look", "Try a neutral-coloured outfit with a simple belt and watch."),
+        ],
+        "party": [
+            ("Party-ready look", "Choose a statement top or shirt with well-fitted trousers."),
+            ("Elegant evening look", "Try a coordinated outfit with stylish footwear."),
+        ],
+        "traditional": [
+            ("Traditional elegance", "Explore a kurta set or a traditional outfit with matching footwear."),
+            ("Fusion style", "Combine traditional pieces with modern accessories."),
+        ],
+        "date": [
+            ("Relaxed outing look", "Try a well-fitted shirt or top with comfortable jeans."),
+            ("Smart casual look", "Combine neutral colours with clean, simple accessories."),
+        ],
+    }
+    occasion = str(request["occasion"]).strip().lower()
+    colour = str(request["colour"]).strip().lower()
+    comfort = str(request["comfort"]).strip().lower()
+    colour_name = {
+        "any": "your favourite colours",
+        "pastel": "pastel shades",
+    }.get(colour, colour)
+    ideas = outfit_ideas.get(occasion, outfit_ideas["everyday"])
+    budget = float(request["budget"])
+
+    return [
+        {
+            "category": "outfit",
+            "title": title,
+            "description": description,
+            "details": (
+                f"Colour: {colour_name} | Style: {comfort} | "
+                f"Budget: ₹{budget:,.0f}"
+            ),
+        }
+        for title, description in ideas
+    ]

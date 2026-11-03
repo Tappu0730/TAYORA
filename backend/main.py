@@ -5,6 +5,7 @@ from app.routes.recommendations import router as recommendations_router
 from app.routes.face_analysis import router as face_analysis_router
 from app.routes.face_shape import router as face_shape_router
 from app.routes.scan import router as scan_router
+from app.routes.fashion import router as fashion_router
 from app.config import APP_NAME, CORS_ORIGINS
 
 app = FastAPI(title=APP_NAME, version="0.2.0", description="API for TAYORA grooming and style recommendations.")
@@ -22,6 +23,7 @@ app.include_router(recommendations_router, prefix="/api")
 app.include_router(face_analysis_router, prefix="/api")
 app.include_router(face_shape_router, prefix="/api")
 app.include_router(scan_router, prefix="/api")
+app.include_router(fashion_router, prefix="/api")
 @app.get("/")
 def root():
     return {"message": "Welcome to TAYORA API", "docs": "/docs"}

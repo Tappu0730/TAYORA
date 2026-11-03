@@ -34,3 +34,10 @@ class ScanRecommendationInput(BaseModel):
     posture_observations: list[str] = Field(default_factory=list, max_length=8)
     preferences: ScanPreferences = Field(default_factory=ScanPreferences)
 
+
+class FashionRecommendationInput(BaseModel):
+    occasion: str = Field(..., min_length=1, max_length=30)
+    colour: str = Field(..., min_length=1, max_length=30)
+    budget: float = Field(..., gt=0)
+    comfort: str = Field(..., min_length=1, max_length=30)
+

@@ -119,39 +119,15 @@
         </p>
     </main>
 
+    <script src="../js/config.js"></script>
     <script>
         const fashionForm = document.getElementById("fashion-form");
         const fashionResults = document.getElementById("fashion-results");
         const fashionStatus = document.getElementById("fashion-status");
 
-        const outfitIdeas = {
-            everyday: [
-                ["Casual everyday look", "Pair a comfortable T-shirt with jeans and sneakers."],
-                ["Relaxed look", "Try a casual shirt with trousers and comfortable shoes."]
-            ],
-            college: [
-                ["College casual", "Try straight-fit jeans, a simple top and sneakers."],
-                ["Smart college look", "Combine a shirt, relaxed trousers and a casual bag."]
-            ],
-            formal: [
-                ["Office-ready look", "Pair a formal shirt with tailored trousers and clean shoes."],
-                ["Minimal formal look", "Try a neutral-coloured outfit with a simple belt and watch."]
-            ],
-            party: [
-                ["Party-ready look", "Choose a statement top or shirt with well-fitted trousers."],
-                ["Elegant evening look", "Try a coordinated outfit with stylish footwear."]
-            ],
-            traditional: [
-                ["Traditional elegance", "Explore a kurta set or a traditional outfit with matching footwear."],
-                ["Fusion style", "Combine traditional pieces with modern accessories."]
-            ],
-            date: [
-                ["Relaxed outing look", "Try a well-fitted shirt or top with comfortable jeans."],
-                ["Smart casual look", "Combine neutral colours with clean, simple accessories."]
-            ]
-        };
+        const apiBase = window.TAYORA_CONFIG?.apiBaseUrl || "http://127.0.0.1:8000/api";
 
-        fashionForm.addEventListener("submit", function (event) {
+        fashionForm.addEventListener("submit", async function (event) {
             event.preventDefault();
 
             const occasion = document.getElementById("occasion").value;
@@ -165,39 +141,46 @@
                 return;
             }
 
-            const colourName = colour === "any" ? "your favourite colours" :
-                colour === "pastel" ? "pastel shades" : colour;
-
-            const ideas = outfitIdeas[occasion];
-
+            fashionStatus.textContent = "Loading outfit recommendations...";
             fashionResults.replaceChildren();
 
-            ideas.forEach(function (idea, index) {
-                const card = document.createElement("article");
-                card.className = "mini-card";
+            try {
+                const response = await fetch(`${apiBase}/fashion/recommendations`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ occasion, colour, budget, comfort })
+                });
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.detail || "The fashion recommendations could not be loaded.");
+                }
 
-                const tag = document.createElement("span");
-                tag.className = "pill";
-                tag.textContent = "OUTFIT " + (index + 1);
+                (data.recommendations || []).forEach(function (recommendation, index) {
+                    const card = document.createElement("article");
+                    card.className = "mini-card";
 
-                const heading = document.createElement("h3");
-                heading.textContent = idea[0];
+                    const tag = document.createElement("span");
+                    tag.className = "pill";
+                    tag.textContent = "OUTFIT " + (index + 1);
 
-                const description = document.createElement("p");
-                description.textContent = idea[1];
+                    const heading = document.createElement("h3");
+                    heading.textContent = recommendation.title;
 
-                const details = document.createElement("p");
-                details.textContent =
-                    "Colour: " + colourName +
-                    " | Style: " + comfort +
-                    " | Budget: ₹" + budget.toLocaleString("en-IN");
+                    const description = document.createElement("p");
+                    description.textContent = recommendation.description;
 
-                card.append(tag, heading, description, details);
-                fashionResults.appendChild(card);
-            });
+                    const details = document.createElement("p");
+                    details.textContent = recommendation.details;
 
-            fashionStatus.textContent =
-                "Here are your outfit ideas based on your preferences!";
+                    card.append(tag, heading, description, details);
+                    fashionResults.appendChild(card);
+                });
+
+                fashionStatus.textContent =
+                    "Here are your outfit ideas based on your preferences!";
+            } catch (error) {
+                fashionStatus.textContent = `Could not load outfit recommendations: ${error.message}`;
+            }
         });
     </script>
 </body>
