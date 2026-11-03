@@ -1,4 +1,4 @@
-(() => {
+ (async () => {
     const PROFILE_KEY = "tayoraProfile";
 
     const readProfile = () => {
@@ -33,7 +33,30 @@
         clothingPreference: document.getElementById("style")
     };
 
-    const savedProfile = readProfile();
+    let savedProfile = readProfile();
+    if (window.TAYORA_AUTH?.isAuthenticated()) {
+        try {
+            const response = await window.TAYORA_AUTH.apiFetch("/profile/me");
+            const result = await response.json();
+            if (response.ok && result.profile) {
+                const remote = result.profile;
+                savedProfile = {
+                    ...savedProfile,
+                    age: remote.age,
+                    gender: remote.gender,
+                    skinType: remote.skin_type || savedProfile.skinType,
+                    hairType: remote.hair_type || savedProfile.hairType,
+                    faceShape: remote.face_shape || savedProfile.faceShape,
+                    monthlyBudget: remote.budget ?? savedProfile.monthlyBudget,
+                    concerns: remote.concerns || savedProfile.concerns,
+                    clothingPreference: remote.style_preferences || savedProfile.clothingPreference
+                };
+                localStorage.setItem(PROFILE_KEY, JSON.stringify(savedProfile));
+            }
+        } catch {
+            // Keep the last local profile if the API is temporarily unavailable.
+        }
+    }
     Object.entries(fields).forEach(([key, field]) => {
         if (field && savedProfile[key] != null && savedProfile[key] !== "") {
             field.value = String(savedProfile[key]);
@@ -49,7 +72,7 @@
         form.appendChild(status);
     }
 
-    form.addEventListener("submit", (event) => {
+    form.addEventListener("submit", async (event) => {
         event.preventDefault();
 
         const ageValue = fields.age?.value.trim() || "";
@@ -80,6 +103,25 @@
             clothingPreference: fields.clothingPreference?.value || "Casual"
         };
 
+        const accountEmail = document.getElementById("account-email")?.value.trim();
+        const accountPassword = document.getElementById("account-password")?.value || "";
+        if (accountEmail && accountPassword) {
+            status.textContent = "Creating your account...";
+            try {
+                const response = await window.TAYORA_AUTH.apiFetch("/auth/register", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email: accountEmail, password: accountPassword })
+                });
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.detail || "Could not create your account.");
+                window.TAYORA_AUTH.setSession(result);
+            } catch (error) {
+                status.textContent = error.message;
+                return;
+            }
+        }
+
         try {
             localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
         } catch {
@@ -87,7 +129,31 @@
             return;
         }
 
-        status.textContent = "Your profile is saved in this browser.";
+        if (window.TAYORA_AUTH?.isAuthenticated()) {
+            try {
+                const response = await window.TAYORA_AUTH.apiFetch("/profile/me", {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        age: profile.age,
+                        gender: profile.gender,
+                        skin_type: profile.skinType,
+                        hair_type: profile.hairType,
+                        face_shape: profile.faceShape,
+                        concerns: profile.concerns,
+                        style_preferences: profile.clothingPreference,
+                        budget: profile.monthlyBudget
+                    })
+                });
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.detail || "Profile sync failed.");
+                status.textContent = "Your account and profile are saved securely.";
+            } catch (error) {
+                status.textContent = `Profile saved locally, but cloud sync failed: ${error.message}`;
+            }
+        } else {
+            status.textContent = "Your profile is saved in this browser. Sign in to sync it across devices.";
+        }
         const successMessage = document.getElementById("success-message");
         if (successMessage) successMessage.hidden = false;
 

@@ -1,5 +1,5 @@
 
-(() => {
+ (async () => {
     const summary = document.getElementById("profile-summary");
     const notice = document.getElementById("profile-notice");
 
@@ -18,6 +18,30 @@
         }
     };
 
+    const loadAccountProfile = async () => {
+        if (!window.TAYORA_AUTH?.isAuthenticated()) return readProfile("tayoraProfile");
+        try {
+            const response = await window.TAYORA_AUTH.apiFetch("/profile/me");
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.detail || "Profile unavailable");
+            const remote = result.profile || {};
+            const profile = {
+                age: remote.age,
+                gender: remote.gender,
+                skinType: remote.skin_type || "Not sure",
+                hairType: remote.hair_type || "Not sure",
+                faceShape: remote.face_shape || "Not sure",
+                monthlyBudget: remote.budget,
+                concerns: remote.concerns || "",
+                clothingPreference: remote.style_preferences || "Casual"
+            };
+            localStorage.setItem("tayoraProfile", JSON.stringify(profile));
+            return profile;
+        } catch {
+            return readProfile("tayoraProfile");
+        }
+    };
+
     const makeItem = (label, value) => {
         const wrapper = document.createElement("div");
         wrapper.className = "field";
@@ -32,7 +56,7 @@
         return wrapper;
     };
 
-    const rawProfile = readProfile("tayoraProfile");
+    const rawProfile = await loadAccountProfile();
     const profile = {
         ...rawProfile,
         skinType: rawProfile.skinType || rawProfile.skin || "Not sure",

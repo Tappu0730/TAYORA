@@ -16,6 +16,7 @@
             <a href="dashboard.html">Dashboard</a>
             <a href="products.html">Products</a>
             <a href="wardrobe.html">My wardrobe</a>
+            <a href="../index.html" data-logout>Sign out</a>
         </nav>
     </header>
 
@@ -133,6 +134,7 @@
     </main>
 
     <script src="../js/config.js"></script>
+    <script src="../js/auth.js"></script>
     <script>
         const fashionForm = document.getElementById("fashion-form");
         const fashionResults = document.getElementById("fashion-results");
@@ -156,14 +158,28 @@
             localStorage.setItem(key, JSON.stringify(value));
         };
 
-        const renderSavedLooks = () => {
-            const looks = readStorage(SAVED_LOOKS_KEY, []);
+        const loadSavedLooks = async () => {
+            if (!window.TAYORA_AUTH?.isAuthenticated()) return readStorage(SAVED_LOOKS_KEY, []);
+            try {
+                const response = await window.TAYORA_AUTH.apiFetch("/looks");
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.detail || "Saved looks unavailable");
+                return result.looks || [];
+            } catch {
+                return readStorage(SAVED_LOOKS_KEY, []);
+            }
+        };
+
+        const renderSavedLooks = async () => {
+            const looks = await loadSavedLooks();
             savedLooks.replaceChildren();
             if (!looks.length) {
                 savedLooksStatus.textContent = "No saved looks yet. Generate an outfit and choose Save look.";
                 return;
             }
-            savedLooksStatus.textContent = `${looks.length} saved look${looks.length === 1 ? "" : "s"} in this browser.`;
+            savedLooksStatus.textContent = window.TAYORA_AUTH?.isAuthenticated()
+                ? `${looks.length} saved look${looks.length === 1 ? "" : "s"} in your account.`
+                : `${looks.length} saved look${looks.length === 1 ? "" : "s"} in this browser.`;
             looks.forEach((look) => {
                 const card = document.createElement("article");
                 card.className = "mini-card saved-look-card";
@@ -180,7 +196,10 @@
                 remove.type = "button";
                 remove.className = "text-button";
                 remove.textContent = "Remove";
-                remove.addEventListener("click", () => {
+                remove.addEventListener("click", async () => {
+                    if (window.TAYORA_AUTH?.isAuthenticated() && Number.isInteger(look.id)) {
+                        await window.TAYORA_AUTH.apiFetch(`/looks/${look.id}`, { method: "DELETE" });
+                    }
                     writeStorage(SAVED_LOOKS_KEY, looks.filter((item) => item.id !== look.id));
                     renderSavedLooks();
                 });
@@ -189,8 +208,28 @@
             });
         };
 
-        const saveLook = (recommendation, preferences, button) => {
+        const saveLook = async (recommendation, preferences, button) => {
             const looks = readStorage(SAVED_LOOKS_KEY, []);
+            if (window.TAYORA_AUTH?.isAuthenticated()) {
+                const response = await window.TAYORA_AUTH.apiFetch("/looks", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        title: recommendation.title,
+                        description: recommendation.description,
+                        details: recommendation.details,
+                        preferences
+                    })
+                });
+                if (!response.ok) {
+                    savedLooksStatus.textContent = "Could not save this look to your account.";
+                    return;
+                }
+                button.textContent = "Saved ✓";
+                button.disabled = true;
+                renderSavedLooks();
+                return;
+            }
             const alreadySaved = looks.some((look) => look.title === recommendation.title && look.details === recommendation.details);
             if (!alreadySaved) {
                 looks.unshift({

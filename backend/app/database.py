@@ -9,3 +9,8 @@ connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite")
 engine = create_engine(DATABASE_URL, connect_args=connect_args)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
+
+
+def create_tables():
+    # Use a managed PostgreSQL DATABASE_URL for production persistence.
+    Base.metadata.create_all(bind=engine)

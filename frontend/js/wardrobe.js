@@ -12,11 +12,23 @@
         }
     };
 
-    const render = () => {
-        const items = readItems();
+    const loadItems = async () => {
+        if (!window.TAYORA_AUTH?.isAuthenticated()) return readItems();
+        try {
+            const response = await window.TAYORA_AUTH.apiFetch("/wardrobe");
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.detail || "Wardrobe unavailable");
+            return result.items || [];
+        } catch {
+            return readItems();
+        }
+    };
+
+    const render = async () => {
+        const items = await loadItems();
         list.replaceChildren();
         status.textContent = items.length
-            ? `${items.length} wardrobe item${items.length === 1 ? "" : "s"} saved in this browser.`
+            ? `${items.length} wardrobe item${items.length === 1 ? "" : "s"} saved ${window.TAYORA_AUTH?.isAuthenticated() ? "in your account." : "in this browser."}`
             : "No items added yet.";
         items.forEach((item) => {
             const card = document.createElement("article");
@@ -32,7 +44,14 @@
             remove.type = "button";
             remove.className = "text-button";
             remove.textContent = "Remove";
-            remove.addEventListener("click", () => {
+            remove.addEventListener("click", async () => {
+                if (window.TAYORA_AUTH?.isAuthenticated() && Number.isInteger(item.id)) {
+                    const response = await window.TAYORA_AUTH.apiFetch(`/wardrobe/${item.id}`, { method: "DELETE" });
+                    if (!response.ok) {
+                        status.textContent = "Could not remove this wardrobe item.";
+                        return;
+                    }
+                }
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(items.filter((saved) => saved.id !== item.id)));
                 render();
             });
@@ -41,7 +60,7 @@
         });
     };
 
-    form.addEventListener("submit", (event) => {
+    form.addEventListener("submit", async (event) => {
         event.preventDefault();
         const item = {
             id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
@@ -51,9 +70,22 @@
             occasion: document.getElementById("itemOccasion").value
         };
         if (!item.name) return;
-        const items = readItems();
-        items.unshift(item);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(items.slice(0, 100)));
+        if (window.TAYORA_AUTH?.isAuthenticated()) {
+            const response = await window.TAYORA_AUTH.apiFetch("/wardrobe", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(item)
+            });
+            if (!response.ok) {
+                const result = await response.json();
+                status.textContent = result.detail || "Could not save wardrobe item.";
+                return;
+            }
+        } else {
+            const items = readItems();
+            items.unshift(item);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(items.slice(0, 100)));
+        }
         form.reset();
         render();
     });

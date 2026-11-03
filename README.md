@@ -22,6 +22,8 @@ TAYORA is a personal grooming and style guide. This local MVP includes a browser
 
    The API documentation is at `http://127.0.0.1:8000/docs`.
 
+   For account sync in production, set `JWT_SECRET_KEY` to a long random secret and point `DATABASE_URL` to a persistent PostgreSQL database. The SQLite default is suitable for local development only; `postgres://` and `postgresql://` URLs are normalized for the included psycopg driver.
+
 4. Open `frontend/index.html` with VS Code Live Server. The checked-in [config.js](frontend/js/config.js) points to the deployed Render API. For a local backend, change `apiBaseUrl` to `http://127.0.0.1:8000/api`.
 
 The API allows the default Live Server origins on port 5500. If your frontend uses a different port, set `CORS_ORIGINS` in `backend/.env` using the format shown in `backend/.env.example`.
@@ -44,13 +46,14 @@ The frontend is configured to call the deployed Render API. If the Render servic
 - Live camera face-shape smoothing requires at least two of three valid frames to agree; otherwise the result stays `uncertain` and the user can confirm a value manually.
 - The Fashion page sends occasion, colour, style, and budget to `POST /api/fashion/recommendations`; the FastAPI service returns two rule-based outfit ideas as JSON.
 - The Fashion page supports local saved-look feedback, and the Wardrobe page stores manually tagged clothing items in browser localStorage without uploading clothing photos.
+- Optional account authentication is available through `/api/auth/register` and `/api/auth/login`. Signed-in profiles, wardrobe items, and saved looks use protected API routes; configure a persistent PostgreSQL `DATABASE_URL` and a strong `JWT_SECRET_KEY` for production.
 - Face analysis uploads a JPG, PNG, or WebP image up to 5 MB. The API estimates one of six style categories (oval, round, square, rectangular, heart, or diamond) with MediaPipe landmarks and can return an uncertain result when proportions are ambiguous. Images are processed for the request and are not saved by the app.
 - Live Personal Scan provides an optional camera preview, three-frame face-shape smoothing, basic lighting/framing/pose quality gates, an optional temporary photo upload, and editable skin, hair, body-proportion, and posture observations. Confirmed labels are sent to `POST /api/scan/recommendations`; camera frames and uploaded photos are not stored.
 - Product cards are illustrative suggestions with approximate prices. Retailer availability and other product details are not verified.
 
 ## Current limits
 
-- Profiles and assessment results stay in browser storage. There is no account system, cloud sync, or connected profile database yet.
+- Guest profiles and assessment results stay in browser storage. Signed-in account sync requires a persistent PostgreSQL database and configured JWT secret; guest mode remains available.
 - Recommendations use simple rules; Gemini/Groq and other AI integrations are not connected.
 - Face-shape results are approximate style prompts, not reliable measurements or medical advice. Users can edit the estimate in their profile.
 - The first Live Personal Scan version intentionally keeps skin, hair, body-proportion, and posture observations editable instead of claiming automatic diagnosis. It uses the camera for preview and face-shape estimation, while the user confirms the other observations.
