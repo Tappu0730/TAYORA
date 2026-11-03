@@ -1301,3 +1301,193 @@ input, select {
         grid-template-columns: 1fr;
     }
 }
+
+/* Shared premium shell for every inner page. */
+body:not(.home-page) {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at 92% 7%, rgba(201, 169, 110, .12), transparent 24rem),
+        #f4f1e9;
+}
+
+body:not(.home-page) .site-header {
+    position: sticky;
+    top: 14px;
+    z-index: 20;
+    width: min(1220px, calc(100% - 48px));
+    min-height: 66px;
+    margin: 14px auto 0;
+    padding: 11px 14px 11px 24px;
+    border: 1px solid rgba(222, 216, 202, .9);
+    border-radius: 999px;
+    background: rgba(255, 253, 248, .86);
+    box-shadow: 0 14px 36px rgba(18, 60, 53, .08);
+    backdrop-filter: blur(18px);
+}
+
+body:not(.home-page) .site-header nav {
+    gap: 5px;
+}
+
+body:not(.home-page) .site-header nav a {
+    padding: 9px 12px;
+    border-radius: 999px;
+    color: #53625b;
+    font-size: 12px;
+    transition: color .25s ease, background .25s ease, transform .25s ease;
+}
+
+body:not(.home-page) .site-header nav a:hover {
+    color: var(--green);
+    background: #f0ece2;
+    transform: translateY(-1px);
+}
+
+body:not(.home-page) .page-wrap {
+    width: min(1080px, 88%);
+    margin: 78px auto 110px;
+}
+
+body:not(.home-page) .page-wrap > h1 {
+    max-width: 780px;
+    margin-bottom: 16px;
+    font-size: clamp(42px, 6vw, 72px);
+    letter-spacing: -2px;
+    line-height: 1.04;
+}
+
+body:not(.home-page) .page-wrap > .eyebrow {
+    margin-bottom: 20px;
+}
+
+body:not(.home-page) .page-intro {
+    max-width: 700px;
+    margin-bottom: 34px;
+    font-size: 14px;
+}
+
+body:not(.home-page) .page-wrap > .panel,
+body:not(.home-page) > main.panel {
+    position: relative;
+    overflow: hidden;
+    border-radius: 28px;
+    box-shadow: 0 20px 55px rgba(18, 60, 53, .09);
+}
+
+body:not(.home-page) .page-wrap > .panel::before,
+body:not(.home-page) > main.panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold), var(--sage), transparent);
+}
+
+body:not(.home-page) .page-wrap > h2 {
+    margin: 55px 0 20px;
+    color: var(--green);
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(29px, 4vw, 43px);
+    font-weight: 500;
+    letter-spacing: -1px;
+}
+
+body:not(.home-page) .panel h2 {
+    color: var(--green);
+    font-family: 'Playfair Display', serif;
+    font-weight: 500;
+    letter-spacing: -.4px;
+}
+
+body:not(.home-page) .cards {
+    gap: 14px;
+}
+
+body:not(.home-page) .mini-card {
+    border: 1px solid rgba(222, 216, 202, .9);
+    border-radius: 20px;
+    background: #fbfaf5;
+    box-shadow: none;
+    transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+}
+
+body:not(.home-page) .mini-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(201, 169, 110, .75);
+    box-shadow: 0 14px 30px rgba(18, 60, 53, .08);
+}
+
+body:not(.home-page) .button {
+    border-radius: 999px;
+}
+
+body:not(.home-page) .field input,
+body:not(.home-page) .field select,
+body:not(.home-page) input,
+body:not(.home-page) select,
+body:not(.home-page) textarea {
+    min-height: 46px;
+    border-radius: 13px;
+    background: #fffdf8;
+}
+
+body:not(.home-page) .form-actions .button {
+    min-height: 48px;
+}
+
+body:not(.home-page) > main.panel {
+    width: min(760px, 92%);
+    margin: 70px auto 100px;
+}
+
+body:not(.home-page) > main.panel h1 {
+    color: var(--green);
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(40px, 7vw, 64px);
+    font-weight: 500;
+    letter-spacing: -1.8px;
+    line-height: 1.05;
+}
+
+body:not(.home-page) > main.panel > p:not(.eyebrow) {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+@media (max-width: 760px) {
+    body:not(.home-page) .site-header {
+        position: relative;
+        top: 0;
+        width: calc(100% - 28px);
+        margin-top: 14px;
+        padding: 11px 14px;
+        border-radius: 23px;
+    }
+
+    body:not(.home-page) .site-header nav {
+        justify-content: flex-start;
+        gap: 4px;
+    }
+
+    body:not(.home-page) .site-header nav a {
+        padding: 7px 9px;
+        font-size: 11px;
+    }
+
+    body:not(.home-page) .page-wrap {
+        width: 90%;
+        margin-top: 56px;
+    }
+
+    body:not(.home-page) .page-wrap > h1 {
+        font-size: clamp(40px, 12vw, 58px);
+        letter-spacing: -1.3px;
+    }
+
+    body:not(.home-page) > main.panel {
+        width: 92%;
+        margin-top: 46px;
+    }
+}
