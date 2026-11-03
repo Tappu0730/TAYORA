@@ -1291,9 +1291,26 @@ input, select {
     line-height: 1.5;
 }
 
-.scan-check-grid input {
-    width: auto;
-    margin-right: 7px;
+.scan-check-grid label {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    min-height: 28px;
+    margin-top: 13px;
+}
+
+.scan-check-grid input,
+.scan-check-grid input[type="checkbox"] {
+    flex: 0 0 17px;
+    width: 17px;
+    min-width: 17px;
+    height: 17px;
+    min-height: 17px;
+    margin: 2px 0 0;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    accent-color: var(--green);
 }
 
 @media (max-width: 760px) {
