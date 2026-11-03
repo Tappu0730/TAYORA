@@ -691,8 +691,8 @@ footer p {
 }
 
 .home-page .hero-visual {
-  min-height: 520px;
-  border-radius: 260px 260px 28px 28px;
+  min-height: 490px;
+  border-radius: 32px;
   background:
     radial-gradient(ellipse at 50% 29%, rgba(215, 188, 131, .7), transparent 30%),
     radial-gradient(ellipse at 50% 53%, #547d70 0%, var(--green-light) 40%, var(--green-deep) 78%);
@@ -700,10 +700,10 @@ footer p {
 }
 
 .home-page .hero-visual::before {
-  width: 58%;
+  width: 64%;
   height: 74%;
-  top: 12%;
-  border-radius: 180px 180px 20px 20px;
+  top: 11%;
+  border-radius: 28px;
   border-color: rgba(255, 255, 255, .24);
 }
 
@@ -980,6 +980,7 @@ footer p {
 
   .home-page .hero-visual {
     min-height: 410px;
+    border-radius: 28px;
   }
 
   .home-page .hero-visual::after {
