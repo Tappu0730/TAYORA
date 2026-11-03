@@ -709,11 +709,15 @@ footer p {
 
 .home-page .hero-visual::after {
   content: 'TAYORA.';
-  top: 38%;
-  font-size: clamp(28px, 4vw, 46px);
+  top: 43%;
+  z-index: 2;
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(31px, 4.2vw, 49px);
+  font-weight: 600;
   letter-spacing: 8px;
-  color: rgba(255, 253, 248, .64);
-  opacity: .55;
+  color: rgba(255, 253, 248, .92);
+  text-shadow: 0 4px 18px rgba(4, 28, 24, .32);
+  opacity: 1;
 }
 
 .home-page .hero-tag {
